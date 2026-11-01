@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flex布局四种卡片 完全匹配截图</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        ul{
+            list-style: none;
+        }
+        /* 外层横向放4个画板 */
+        .wrap{
+            display: flex;
+            gap:20px;
+            padding:20px;
+        }
+        /* 画板，外框，内部整体居中 */
+        .board{
+            width: 300px;
+            height: 400px;
+            border:1px solid #999;
+            background: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .flex{
+            display: flex;
+            gap:12px;
+        }
+        .card{
+            background: #ddd;
+            border:1px solid #000;
+        }
+        /* 画板1：单个正方形 */
+        .b1{
+            flex-direction: column;
+            align-items: center;
+        }
+        .b1 .card{
+            width:100px;
+            height:100px;
+        }
+        /* 画板2：上下两个横矩形 */
+        .b2{
+            flex-direction: column;
+            align-items: center;
+        }
+        .b2 .card{
+            width:140px;
+            height:80px;
+        }
+        /* 画板3：2行2列四个矩形 */
+        .b3{
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 292px;
+        }
+        .b3 .card{
+            width:140px;
+            height:100px;
+        }
+        /* =========画板4 重点！严格匹配原图比例========= */
+        .b4{
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+        .b4 .top-card{
+            width:212px;
+            height:90px;
+        }
+        .b4 .row-bottom{
+            display:flex;
+            gap:14px;
+        }
+        .b4 .row-bottom .card{
+            width:100px;
+            height:90px;
+        }
+    </style>
+</head>
+<body>
+    <h2>陈新阳 flex 四种布局</h2>
+    <div class="wrap">
+        <!--画板1-->
+        <div class="board">
+            <ul class="flex b1">
+                <li class="card"></li>
+            </ul>
+        </div>
+        <!--画板2-->
+        <div class="board">
+            <ul class="flex b2">
+                <li class="card"></li>
+                <li class="card"></li>
+            </ul>
+        </div>
+        <!--画板3-->
+        <div class="board">
+            <ul class="flex b3">
+                <li class="card"></li>
+                <li class="card"></li>
+                <li class="card"></li>
+                <li class="card"></li>
+            </ul>
+        </div>
+        <!--画板4，和截图一模一样：上1长竖块，下2个细一点短一点竖块-->
+        <div class="board">
+            <div class="flex b4">
+                <div class="card top-card"></div>
+                <div class="row-bottom">
+                    <div class="card"></div>
+                    <div class="card"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

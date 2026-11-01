@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        ul{
+            list-style: none;
+        }
+        img{
+            display: block;
+        }
+        .ilist{
+            display: flex;
+            margin: 8px;
+        }
+        .ilist li{
+            width: 30%;
+            margin-right: 1px;
+            flex-grow: 1;
+            position: relative;
+        }
+        .ilist img{
+            width: 100%;
+        }
+        .ilist p{
+            text-align: center; 
+            font-size: 14px;
+            line-height: 33px;
+            position: absolute;
+            bottom: 0;
+           width: 100%;
+           background-color: rgba(0, 0, 0, 0.5);
+           color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <ul class="ilist">
+        <li><img src="./img/1.jpg"><p>陈新阳的上图下文</p></li>
+        <li><img src="./img/2.jpg"><p>图片 2</p></li>
+        <li><img src="./img/pcl.png"><p>图片 3</p></li>
+    </ul>  
+</body>
+</html>

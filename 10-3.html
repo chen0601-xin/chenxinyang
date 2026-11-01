@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>陈新阳的响应式网格</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 16px;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #f0f3ef;
+			color: #202b2a;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		main {
+			width: min(1120px, 100%);
+			min-height: 100vh;
+			margin: 0 auto;
+			padding: 3rem 1.75rem;
+		}
+
+		h1 {
+			margin: 0 0 0.5rem;
+			font-size: 2rem;
+			font-weight: 600;
+		}
+
+		.subtitle {
+			margin: 0 0 1.75rem;
+			color: #64716d;
+			font-size: 0.9375rem;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 1rem;
+		}
+
+		.tile {
+			min-height: 11.25rem;
+			display: grid;
+			place-items: center;
+			border-radius: 0.5rem;
+			color: #fff;
+			font-size: 1.375rem;
+			font-weight: 600;
+			box-shadow: 0 0.5rem 1.25rem rgb(32 43 42 / 10%);
+		}
+
+		.tile:nth-child(1), .tile:nth-child(5) { background: #23685c; }
+		.tile:nth-child(2), .tile:nth-child(6) { background: #c36e3d; }
+		.tile:nth-child(3), .tile:nth-child(7) { background: #416d91; }
+		.tile:nth-child(4), .tile:nth-child(8) { background: #8a596c; }
+
+		@media (max-width: 1200px) {
+			.grid {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 900px) {
+			html {
+				font-size: 15px;
+			}
+
+			main {
+				padding: 2.25rem 1.375rem;
+			}
+
+			.grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 520px) {
+			html {
+				font-size: 13px;
+			}
+
+			main {
+				padding: 1.75rem 1.125rem;
+			}
+
+			.grid {
+				grid-template-columns: 1fr;
+				gap: 0.75rem;
+			}
+
+			.tile {
+				min-height: 8.75rem;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<header>
+			<h1>陈新阳</h1>
+			<p class="subtitle">响应式盒子布局</p>
+		</header>
+		<section class="grid" aria-label="八个响应式盒子">
+			<div class="tile">01</div>
+			<div class="tile">02</div>
+			<div class="tile">03</div>
+			<div class="tile">04</div>
+			<div class="tile">05</div>
+			<div class="tile">06</div>
+			<div class="tile">07</div>
+			<div class="tile">08</div>
+		</section>
+	</main>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闲鱼风格导航栏 - 陈新阳</title>
+    <link rel="stylesheet" href="font/download/iconfont.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .tabbar-wrapper {
+            width: 100%;
+            max-width: 480px;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .tabbar {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            height: 56px;
+            position: relative;
+        }
+        .tabbar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.2s;
+            height: 100%;
+        }
+        .tabbar-item i {
+            font-size: 22px;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .tabbar-item span {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+            transition: color 0.2s;
+        }
+        .tabbar-item.active i,
+        .tabbar-item.active span {
+            color: #FF6600;
+        }
+
+        .publish-btn {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        .publish-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6600, #FF8C00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.35);
+            position: absolute;
+            top: -12px;
+            transition: transform 0.2s;
+        }
+        .publish-btn:active .publish-circle {
+            transform: scale(0.92);
+        }
+        .publish-circle i {
+            font-size: 22px;
+            color: #fff;
+        }
+        .publish-btn span {
+            position: absolute;
+            bottom: 4px;
+            font-size: 10px;
+            color: #999;
+        }
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 20px);
+            background: #ff4d4f;
+            color: #fff;
+            font-size: 10px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabbar-wrapper">
+        <nav class="tabbar">
+            <div class="tabbar-item active">
+                <i class="iconfont icon-shouye"></i>
+                <span>首页</span>
+            </div>
+            <div class="tabbar-item">
+                <i class="iconfont icon-fujin"></i>
+                <span>附近</span>
+            </div>
+            <div class="publish-btn">
+                <div class="publish-circle">
+                    <i class="iconfont icon-paizhao"></i>
+                </div>
+                <span>卖闲置</span>
+            </div>
+            <div class="tabbar-item">
+                <i class="iconfont icon-xiaoxi"></i>
+                <span>消息</span>
+                <em class="badge">3</em>
+            </div>
+            <div class="tabbar-item">
+                <i class="iconfont icon-wode"></i>
+                <span>我的</span>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Awesome 图标</title>
+    <link rel="stylesheet" href="cdn/fa/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f0f2f5;
+            padding: 30px;
+        }
+        h1 { text-align: center; margin-bottom: 30px; color: #333; }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+            color: #444;
+            border-left: 4px solid #0d6efd;
+            padding-left: 12px;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 8px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .icon-item:hover { background: #e9ecef; transform: translateY(-3px); }
+        .icon-item i { font-size: 32px; margin-bottom: 8px; }
+        .icon-item span { font-size: 12px; color: #666; }
+        .text-blue { color: #0d6efd; }
+        .text-red { color: #dc3545; }
+        .text-green { color: #198754; }
+        .text-orange { color: #fd7e14; }
+        .text-purple { color: #6f42c1; }
+        .text-cyan { color: #0dcaf0; }
+    </style>
+</head>
+<body>
+    <h1>Font Awesome 字体图标示例</h1>
+
+    <div class="section">
+        <h2>Solid 实心图标 (fa-solid)</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i class="fas fa-house text-blue"></i><span>首页</span></div>
+            <div class="icon-item"><i class="fas fa-user text-purple"></i><span>用户</span></div>
+            <div class="icon-item"><i class="fas fa-heart text-red"></i><span>收藏</span></div>
+            <div class="icon-item"><i class="fas fa-star text-orange"></i><span>星星</span></div>
+            <div class="icon-item"><i class="fas fa-magnifying-glass text-cyan"></i><span>搜索</span></div>
+            <div class="icon-item"><i class="fas fa-gear text-green"></i><span>设置</span></div>
+            <div class="icon-item"><i class="fas fa-envelope text-blue"></i><span>邮件</span></div>
+            <div class="icon-item"><i class="fas fa-phone text-green"></i><span>电话</span></div>
+            <div class="icon-item"><i class="fas fa-camera text-purple"></i><span>相机</span></div>
+            <div class="icon-item"><i class="fas fa-music text-red"></i><span>音乐</span></div>
+            <div class="icon-item"><i class="fas fa-book text-orange"></i><span>书籍</span></div>
+            <div class="icon-item"><i class="fas fa-car text-cyan"></i><span>汽车</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Regular 线性图标 (fa-regular)</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i class="far fa-user text-blue"></i><span>用户</span></div>
+            <div class="icon-item"><i class="far fa-heart text-red"></i><span>收藏</span></div>
+            <div class="icon-item"><i class="far fa-star text-orange"></i><span>星星</span></div>
+            <div class="icon-item"><i class="far fa-envelope text-purple"></i><span>邮件</span></div>
+            <div class="icon-item"><i class="far fa-bell text-green"></i><span>通知</span></div>
+            <div class="icon-item"><i class="far fa-folder text-cyan"></i><span>文件夹</span></div>
+            <div class="icon-item"><i class="far fa-file text-blue"></i><span>文件</span></div>
+            <div class="icon-item"><i class="far fa-image text-red"></i><span>图片</span></div>
+            <div class="icon-item"><i class="far fa-comment text-orange"></i><span>评论</span></div>
+            <div class="icon-item"><i class="far fa-calendar text-purple"></i><span>日历</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Brands 品牌图标 (fa-brands)</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i class="fab fa-github text-blue"></i><span>GitHub</span></div>
+            <div class="icon-item"><i class="fab fa-weixin text-green"></i><span>微信</span></div>
+            <div class="icon-item"><i class="fab fa-weibo text-red"></i><span>微博</span></div>
+            <div class="icon-item"><i class="fab fa-qq text-cyan"></i><span>QQ</span></div>
+            <div class="icon-item"><i class="fab fa-android text-green"></i><span>安卓</span></div>
+            <div class="icon-item"><i class="fab fa-apple text-purple"></i><span>苹果</span></div>
+            <div class="icon-item"><i class="fab fa-chrome text-orange"></i><span>Chrome</span></div>
+            <div class="icon-item"><i class="fab fa-windows text-blue"></i><span>Windows</span></div>
+            <div class="icon-item"><i class="fab fa-ubuntu text-red"></i><span>Ubuntu</span></div>
+            <div class="icon-item"><i class="fab fa-python text-green"></i><span>Python</span></div>
+        </div>
+    </div>
+</body>
+</html>

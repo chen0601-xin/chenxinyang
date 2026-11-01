@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>陈新阳的影像记录</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			padding: 36px 20px;
+			display: grid;
+			place-items: center;
+			background: #edf2f1;
+			color: #172b2b;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.gallery {
+			width: min(820px, 100%);
+		}
+
+		.page-heading {
+			margin: 0 0 20px;
+			font-size: 14px;
+			font-weight: 500;
+			letter-spacing: 0;
+			color: #52706b;
+		}
+
+		.slideshow {
+			position: relative;
+			height: min(70vh, 610px);
+			min-height: 430px;
+			overflow: hidden;
+			border-radius: 10px;
+			background: #172b2b;
+			box-shadow: 0 20px 55px rgb(23 43 43 / 16%);
+		}
+
+		.slide {
+			position: absolute;
+			inset: 0;
+			background: transparent;
+			opacity: 0;
+			animation: slide-show 24s infinite;
+		}
+
+		.slide:nth-child(1) { animation-delay: 0s; }
+		.slide:nth-child(2) { animation-delay: -6s; }
+		.slide:nth-child(3) { animation-delay: -12s; }
+		.slide:nth-child(4) { animation-delay: -18s; }
+
+		.slide img {
+			width: 100%;
+			height: 100%;
+			min-height: 0;
+			display: block;
+			object-fit: cover;
+		}
+
+		.caption {
+			position: absolute;
+			right: 24px;
+			bottom: 24px;
+			left: 24px;
+			padding: 18px 22px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+			border-radius: 6px;
+			background: rgb(0 0 0 / 58%);
+			backdrop-filter: blur(6px);
+			color: #fff;
+		}
+
+		.caption h2 {
+			margin: 0 0 8px;
+			font-size: 22px;
+			font-weight: 600;
+		}
+
+		.caption p {
+			margin: 0;
+			color: rgb(255 255 255 / 82%);
+			font-size: 14px;
+			line-height: 1.7;
+		}
+
+		.slide-number {
+			flex: 0 0 auto;
+			color: rgb(255 255 255 / 72%);
+			font-size: 13px;
+		}
+
+		.progress {
+			height: 3px;
+			overflow: hidden;
+			background: #d5e0dc;
+		}
+
+		.progress span {
+			width: 100%;
+			height: 100%;
+			display: block;
+			background: #2d796a;
+			transform: scaleX(0);
+			transform-origin: left;
+			animation: progress 24s linear infinite;
+		}
+
+		@keyframes slide-show {
+			0%, 21% { opacity: 1; }
+			24%, 100% { opacity: 0; }
+		}
+
+		@keyframes progress {
+			to { transform: scaleX(1); }
+		}
+
+		@media (max-width: 560px) {
+			body {
+				padding: 24px 14px;
+			}
+
+			.slideshow {
+				height: 68vh;
+				min-height: 390px;
+			}
+
+			.caption {
+				right: 14px;
+				bottom: 14px;
+				left: 14px;
+				padding: 14px 16px;
+			}
+
+			.caption h2 {
+				font-size: 19px;
+			}
+
+			.caption p {
+				font-size: 13px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.slide,
+			.progress span {
+				animation: none;
+			}
+
+			.slide {
+				opacity: 0;
+			}
+
+			.slide:first-child {
+				opacity: 1;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="gallery">
+		<p class="page-heading">陈新阳 · 影像记录</p>
+		<section class="slideshow" aria-label="陈新阳的影像幻灯片">
+			<article class="slide">
+				<img src="1.jpg" alt="中国与埃及国旗前的握手交流">
+				<div class="caption">
+					<div>
+						<h2>友好交流</h2>
+						<p>陈新阳镜头中的握手瞬间，记录交流与合作。</p>
+					</div>
+					<span class="slide-number">01 / 04</span>
+				</div>
+			</article>
+			<article class="slide">
+				<img src="2.jpg" alt="海上的船只、彩虹与迎风飘扬的国旗">
+				<div class="caption">
+					<div>
+						<h2>海天之间</h2>
+						<p>陈新阳记录下海风、彩虹与远方交汇的时刻。</p>
+					</div>
+					<span class="slide-number">02 / 04</span>
+				</div>
+			</article>
+			<article class="slide">
+				<img src="4.jpg" alt="阳光照进层叠的绿色森林">
+				<div class="caption">
+					<div>
+						<h2>林间光影</h2>
+						<p>陈新阳用镜头收集森林里安静而丰富的层次。</p>
+					</div>
+					<span class="slide-number">03 / 04</span>
+				</div>
+			</article>
+			<article class="slide">
+				<img src="5.jpg" alt="林间小路两侧的树木与绿意">
+				<div class="caption">
+					<div>
+						<h2>走进自然</h2>
+						<p>跟随陈新阳的视线，在树林中发现日常风景。</p>
+					</div>
+					<span class="slide-number">04 / 04</span>
+				</div>
+			</article>
+		</section>
+		<div class="progress" aria-hidden="true"><span></span></div>
+	</main>
+</body>
+</html>

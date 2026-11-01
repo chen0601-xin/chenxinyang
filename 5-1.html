@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<link lang="en">
+<link>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p{
+            color: red;
+            font-size: 100px;
+        }
+        .text{
+            color: green;
+        }
+        #text{
+            color: rgb(255, 0, 200);
+        }
+        .box{
+            color: rgb(0, 255, 200);
+        }
+        #box #text{
+            color: rgb(0, 0, 200);
+        }
+    </style>
+    <link rel="stylesheet" href="css.css"></link>
+
+</head>
+<body>
+    <h2>层叠与继承</h2>
+<div id="box"class="box">
+<p id="text" class="text">215陈新阳</p>
+<p>层叠与继承的优先级</p>
+
+</div>
+</body>
+</html>
