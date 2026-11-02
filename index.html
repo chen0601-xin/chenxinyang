@@ -111,15 +111,35 @@
             font-size: 14px;
         }
 
+        .chapter {
+            margin-bottom: 40px;
+        }
+
+        .chapter-title {
+            font-size: 20px;
+            color: var(--blue);
+            border-left: 5px solid var(--coral);
+            padding-left: 12px;
+            margin: 28px 0 14px;
+            font-weight: bold;
+        }
+
+        .chapter-title small {
+            font-weight: normal;
+            color: var(--muted);
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
         .works {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);  
+            grid-template-columns: repeat(5, 1fr);
             gap: 14px;
         }
 
         .work-card {
-            min-height: 190px;
-            padding: 22px 18px;
+            min-height: 160px;
+            padding: 18px 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -127,6 +147,9 @@
             border-radius: 14px;
             background: rgba(255, 253, 248, 0.82);
             transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
         }
 
         .work-card:hover {
@@ -138,30 +161,30 @@
         .number {
             color: var(--coral);
             font-family: Georgia, "Times New Roman", serif;
-            font-size: 30px;
+            font-size: 26px;
         }
 
         .work-card h3 {
-            margin: 12px 0 0;
-            font-size: 20px;
+            margin: 8px 0 0;
+            font-size: 16px;
         }
 
         .work-card p {
-            margin: 7px 0 0;
+            margin: 5px 0 0;
             color: var(--muted);
-            font-size: 13px;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
-        .work-card a {
-            margin-top: 20px;
-            color: var(--blue);
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .work-card a::after {
-            content: "  ->";
+        .work-card .chip {
+            display: inline-block;
+            background: var(--blue);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            width: fit-content;
         }
 
         .brief {
@@ -194,10 +217,6 @@
             .works {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .work-card:last-child {
-                grid-column: span 2;
-            }
         }
 
         @media (max-width: 520px) {
@@ -223,10 +242,6 @@
             .works {
                 grid-template-columns: 1fr;
             }
-
-            .work-card:last-child {
-                grid-column: auto;
-            }
         }
     </style>
 </head>
@@ -243,126 +258,85 @@
         <section aria-labelledby="works-title">
             <div class="section-heading">
                 <h2 id="works-title">实践目录</h2>
-                <p>13 个页面 · 原生 HTML / CSS</p>
+                <p>全部页面 · 原生 HTML / CSS / JS</p>
             </div>
 
-            <div class="works">
-                <article class="work-card">
-                    <div>
-                        <span class="number">01</span>
-                        <h3>课堂实践 2-1</h3>
-                        <p>基础网页练习</p>
-                    </div>
-                    <a href="2-1.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 2-5 章 · HTML / CSS 基础</h3>
+                <div class="works">
+                    <a class="work-card" href="2-1.html"><span class="number">2-1</span><h3>HTML基础</h3><p>网页结构与标签</p></a>
+                    <a class="work-card" href="2-2.html"><span class="number">2-2</span><h3>HTML进阶</h3><p>更多常用标签</p></a>
+                    <a class="work-card" href="3-1.html"><span class="number">3-1</span><h3>CSS基础</h3><p>样式与选择器</p></a>
+                    <a class="work-card" href="3-2.html"><span class="number">3-2</span><h3>CSS布局</h3><p>浮动与定位</p></a>
+                    <a class="work-card" href="4-1.html"><span class="number">4-1</span><h3>CSS进阶</h3><p>伪类与动画</p></a>
+                    <a class="work-card" href="5-1.html"><span class="number">5-1</span><h3>综合练习一</h3><p>完整页面</p></a>
+                    <a class="work-card" href="5-2.html"><span class="number">5-2</span><h3>综合练习二</h3><p>完整页面</p></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">02</span>
-                        <h3>课堂实践 2-2</h3>
-                        <p>页面结构练习</p>
-                    </div>
-                    <a href="2-2.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 6-8 章 · 交互与响应式</h3>
+                <div class="works">
+                    <a class="work-card" href="6-1.html"><span class="number">6-1</span><h3>交互效果一</h3><p>过渡与变换</p></a>
+                    <a class="work-card" href="6-2.html"><span class="number">6-2</span><h3>交互效果二</h3><p>动画与交互</p></a>
+                    <a class="work-card" href="7-1.html"><span class="number">7-1</span><h3>综合设计一</h3><p>响应式页面</p></a>
+                    <a class="work-card" href="7-2.html"><span class="number">7-2</span><h3>综合设计二</h3><p>响应式页面</p></a>
+                    <a class="work-card" href="8-1.html"><span class="number">8-1</span><h3>网页设计</h3><p>综合案例</p></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">03</span>
-                        <h3>课堂实践 3-1</h3>
-                        <p>样式设计练习</p>
-                    </div>
-                    <a href="3-1.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 9-11 章 · 进阶特效</h3>
+                <div class="works">
+                    <a class="work-card" href="img/9-1.html"><span class="number">9-1</span><h3>图片特效</h3><p>图片处理</p></a>
+                    <a class="work-card" href="10-1.html"><span class="number">10-1</span><h3>特效一</h3><p>CSS特效</p></a>
+                    <a class="work-card" href="10-2.html"><span class="number">10-2</span><h3>特效二</h3><p>CSS特效</p></a>
+                    <a class="work-card" href="10-3.html"><span class="number">10-3</span><h3>特效三</h3><p>CSS特效</p></a>
+                    <a class="work-card" href="11-1.html"><span class="number">11-1</span><h3>综合特效一</h3><p>动画特效</p></a>
+                    <a class="work-card" href="11-2.html"><span class="number">11-2</span><h3>综合特效二</h3><p>动画特效</p></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">04</span>
-                        <h3>课堂实践 3-2</h3>
-                        <p>网页布局练习</p>
-                    </div>
-                    <a href="3-2.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 13 章 · JavaScript 基础 <small>DOM 操作与事件</small></h3>
+                <div class="works">
+                    <a class="work-card" href="13-1.html"><span class="number">13-1</span><h3>DOM 入门</h3><p>节点与元素</p></a>
+                    <a class="work-card" href="13-2.html"><span class="number">13-2</span><h3>DOM 查询</h3><p>选择与遍历</p></a>
+                    <a class="work-card" href="13-3.html"><span class="number">13-3</span><h3>DOM 修改</h3><p>增删改节点</p></a>
+                    <a class="work-card" href="13-4.html"><span class="number">13-4</span><h3>事件处理</h3><p>鼠标与键盘</p></a>
+                    <a class="work-card" href="13-5.html"><span class="number">13-5</span><h3>综合案例</h3><p>DOM 实战</p></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">05</span>
-                        <h3>课堂实践 4-1</h3>
-                        <p>CSS 进阶练习</p>
-                    </div>
-                    <a href="4-1.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 14 章 · JavaScript 语法 <small>数据类型与输出</small></h3>
+                <div class="works">
+                    <a class="work-card" href="14-1.html"><span class="number">14-1</span><h3>JS 入门</h3><p>第一个脚本 + 弹窗</p></a>
+                    <a class="work-card" href="14-2.html"><span class="number">14-2</span><h3>6 种基本类型</h3><p>String/Number/Boolean/Null/Undefined/Symbol</p><span class="chip">⭐ 数据类型</span></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">06</span>
-                        <h3>课堂实践 5-1</h3>
-                        <p>网页综合练习</p>
-                    </div>
-                    <a href="5-1.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 16 章 · 综合页面 <small>多练习页</small></h3>
+                <div class="works">
+                    <a class="work-card" href="16-1.html"><span class="number">16-1</span><h3>综合页一</h3><p>课堂练习</p></a>
+                    <a class="work-card" href="16-2.html"><span class="number">16-2</span><h3>综合页二</h3><p>课堂练习</p></a>
+                    <a class="work-card" href="16-3.html"><span class="number">16-3</span><h3>综合页三</h3><p>课堂练习</p></a>
+                    <a class="work-card" href="16-4.html"><span class="number">16-4</span><h3>综合页四</h3><p>课堂练习</p></a>
+                </div>
+            </div>
 
-                <article class="work-card">
-                    <div>
-                        <span class="number">07</span>
-                        <h3>课堂实践 5-2</h3>
-                        <p>网页综合练习</p>
-                    </div>
-                    <a href="5-2.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">08</span>
-                        <h3>课堂实践 6-1</h3>
-                        <p>交互页面练习</p>
-                    </div>
-                    <a href="6-1.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">09</span>
-                        <h3>课堂实践 6-2</h3>
-                        <p>交互页面练习</p>
-                    </div>
-                    <a href="6-2.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">10</span>
-                        <h3>课堂实践 7-1</h3>
-                        <p>综合设计练习</p>
-                    </div>
-                    <a href="7-1.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">11</span>
-                        <h3>课堂实践 7-2</h3>
-                        <p>综合设计练习</p>
-                    </div>
-                    <a href="7-2.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">12</span>
-                        <h3>课堂实践 8-1</h3>
-                        <p>网页设计练习</p>
-                    </div>
-                    <a href="8-1.html">打开页面</a>
-                </article>
-
-                <article class="work-card">
-                    <div>
-                        <span class="number">13</span>
-                        <h3>课堂实践 9-1</h3>
-                        <p>网页设计练习</p>
-                    </div>
-                    <a href="img/9-1.html">打开页面</a>
-                </article>
+            <div class="chapter">
+                <h3 class="chapter-title">第 17 章 · JavaScript 进阶 <small>JSON / Fetch / 异步</small></h3>
+                <div class="works">
+                    <a class="work-card" href="17-1.html"><span class="number">17-1</span><h3>JSON 展示</h3><p>stringify / parse / 遍历 / localStorage</p><span class="chip">📦 JSON</span></a>
+                    <a class="work-card" href="17-2.html"><span class="number">17-2</span><h3>Fetch API</h3><p>调用 dog.ceo 随机狗狗接口</p><span class="chip">📡 Fetch</span></a>
+                    <a class="work-card" href="17-3.html"><span class="number">17-3</span><h3>商品列表</h3><p>dummyjson 商品列表 + 详情页</p><span class="chip">📡 Fetch</span></a>
+                    <a class="work-card" href="17-3-detail.html"><span class="number">17-3-D</span><h3>商品详情</h3><p>详情页 (17-3 子页)</p><span class="chip">📡 Fetch</span></a>
+                    <a class="work-card" href="17-4.html"><span class="number">17-4</span><h3>API 测试工具</h3><p>GET/POST/PUT/DELETE/PATCH</p><span class="chip">🔧 工具</span></a>
+                    <a class="work-card" href="17-5.html"><span class="number">17-5</span><h3>定时器演示</h3><p>setTimeout / setInterval</p><span class="chip">⏰ 定时器</span></a>
+                    <a class="work-card" href="17-6.html"><span class="number">17-6</span><h3>Promise 异步</h3><p>包饺子流程 + Promise.all 并行</p><span class="chip">🥟 异步</span></a>
+                </div>
             </div>
         </section>
 
