@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-5 JavaScript定时器</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 20px auto; padding: 0 16px; }
+        h2 { color: #235789; }
+        .panel { border: 1px solid #e5d9c8; border-radius: 12px; padding: 18px; margin-bottom: 18px; background: #fffdf8; }
+        button { padding: 8px 18px; margin: 4px; font-size: 14px; cursor: pointer; border: none; border-radius: 6px; background: #235789; color: #fff; }
+        button:hover { background: #1a4267; }
+        button.stop { background: #e76f51; }
+        button.stop:hover { background: #c85a3f; }
+        button.secondary { background: #94a3b8; }
+        button.secondary:hover { background: #64748b; }
+        .display { font-size: 28px; font-family: Consolas, monospace; color: #17233b; margin: 12px 0; padding: 12px; background: #f8fafc; border-radius: 8px; text-align: center; }
+        .color-box { width: 100px; height: 100px; margin: 12px auto; border-radius: 12px; transition: background .3s; }
+        ul { line-height: 2; }
+        code { background: #f6efe2; color: #235789; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, monospace; font-size: 13px; line-height: 1.5; }
+        .log-box { background: #1e293b; color: #4ade80; padding: 12px; border-radius: 8px; height: 160px; overflow-y: auto; font-family: Consolas, monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h2>陈新阳的JavaScript定时器演示</h2>
+    <ul>
+        <li><code>setTimeout(fn, delay)</code> — 延迟 <strong>一次</strong> 后执行函数</li>
+        <li><code>setInterval(fn, interval)</code> — 每隔一段时间 <strong>反复</strong> 执行</li>
+        <li>对应的清除方法: <code>clearTimeout()</code> / <code>clearInterval()</code></li>
+    </ul>
+
+    <!-- 演示1: setTimeout 延迟一次 -->
+    <div class="panel">
+        <h3>1. setTimeout — 延迟执行一次</h3>
+        <p>点击按钮后，3 秒后弹出提示。</p>
+        <div class="display" id="demo1-msg">等待点击...</div>
+        <button onclick="runTimeout()">⏰ 3秒后执行</button>
+        <button onclick="cancelTimeout()" class="stop">🚫 取消</button>
+    </div>
+
+    <!-- 演示2: setInterval 倒计时 -->
+    <div class="panel">
+        <h3>2. setInterval — 每秒倒计时 (10 → 0)</h3>
+        <div class="display" id="demo2-num">—</div>
+        <button onclick="startCountdown()">▶ 开始倒计时</button>
+        <button onclick="stopCountdown()" class="stop">⏹ 停止</button>
+    </div>
+
+    <!-- 演示3: setInterval 颜色变化 -->
+    <div class="panel">
+        <h3>3. setInterval — 颜色块随机变化</h3>
+        <div class="color-box" id="colorBox"></div>
+        <button onclick="startColor()">🔄 开始变色</button>
+        <button onclick="stopColor()" class="stop">⏹ 停止</button>
+        <button onclick="startColorFast()" class="secondary">⚡ 快速变色</button>
+    </div>
+
+    <!-- 演示4: 时钟 -->
+    <div class="panel">
+        <h3>4. 实战: 实时时钟</h3>
+        <div class="display" id="clock">—</div>
+        <button onclick="startClock()">🕐 启动时钟</button>
+        <button onclick="stopClock()" class="stop">⏹ 停止</button>
+    </div>
+
+    <!-- 演示5: 两者区别 + 清除日志 -->
+    <div class="panel">
+        <h3>5. 控制台日志 (两种定时器对比)</h3>
+        <p>setTimeout 执行一次就停, setInterval 会一直执行直到被清除。</p>
+        <div class="log-box" id="logBox"></div>
+        <button onclick="logCompare()">▶ 启动 setTimeout + setInterval 对比</button>
+        <button onclick="stopLogCompare()" class="stop">⏹ 全部停止</button>
+        <button onclick="document.getElementById('logBox').innerHTML=''" class="secondary">清空日志</button>
+    </div>
+
+    <div class="panel">
+        <h3>📖 核心语法</h3>
+<pre>
+// setTimeout — 单次
+var t = setTimeout(function() {
+    console.log('3秒后执行');
+}, 3000);
+clearTimeout(t);   // 取消
+
+// setInterval — 循环
+var i = setInterval(function() {
+    console.log('每秒执行');
+}, 1000);
+clearInterval(i);  // 取消
+</pre>
+    </div>
+
+    <script>
+        var t1 = null;
+        var t2 = null;
+        var t3 = null;
+        var t4 = null;
+        var lt = null;
+        var li = null;
+
+        // 1. setTimeout
+        function runTimeout() {
+            document.getElementById('demo1-msg').textContent = '⏳ 倒计时中...';
+            if (t1) clearTimeout(t1);
+            t1 = setTimeout(function() {
+                document.getElementById('demo1-msg').textContent = '✅ 3秒到了! 陈新阳的setTimeout!';
+                console.log('setTimeout 执行了');
+                t1 = null;
+            }, 3000);
+        }
+        function cancelTimeout() {
+            if (t1) {
+                clearTimeout(t1);
+                document.getElementById('demo1-msg').textContent = '🚫 已取消';
+                console.log('setTimeout 已取消');
+                t1 = null;
+            }
+        }
+
+        // 2. setInterval 倒计时
+        var countVal = 10;
+        function startCountdown() {
+            stopCountdown();
+            countVal = 10;
+            var el = document.getElementById('demo2-num');
+            el.textContent = countVal;
+            t2 = setInterval(function() {
+                countVal--;
+                el.textContent = countVal;
+                if (countVal <= 0) {
+                    stopCountdown();
+                    el.textContent = '🎉 时间到!';
+                }
+            }, 1000);
+        }
+        function stopCountdown() {
+            if (t2) { clearInterval(t2); t2 = null; }
+        }
+
+        // 3. 颜色块
+        function randomColor() {
+            var r = Math.floor(Math.random() * 256);
+            var g = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+        function startColor() {
+            stopColor();
+            t3 = setInterval(function() {
+                document.getElementById('colorBox').style.background = randomColor();
+            }, 1000);
+        }
+        function startColorFast() {
+            stopColor();
+            t3 = setInterval(function() {
+                document.getElementById('colorBox').style.background = randomColor();
+            }, 200);
+        }
+        function stopColor() {
+            if (t3) { clearInterval(t3); t3 = null; }
+        }
+
+        // 4. 时钟
+        function startClock() {
+            stopClock();
+            var el = document.getElementById('clock');
+            function tick() {
+                var now = new Date();
+                el.textContent = now.toLocaleTimeString('zh-CN');
+            }
+            tick();
+            t4 = setInterval(tick, 1000);
+        }
+        function stopClock() {
+            if (t4) { clearInterval(t4); t4 = null; }
+        }
+
+        // 5. 日志对比
+        function log(msg) {
+            var box = document.getElementById('logBox');
+            var time = new Date().toLocaleTimeString('zh-CN');
+            box.innerHTML += '[' + time + '] ' + msg + '<br>';
+            box.scrollTop = box.scrollHeight;
+            console.log(msg);
+        }
+        function logCompare() {
+            stopLogCompare();
+            log('▶ 启动 setInterval: 每1秒执行一次');
+            log('▶ 启动 setTimeout: 3秒后执行一次');
+
+            var count = 0;
+            li = setInterval(function() {
+                count++;
+                log('setInterval 第 ' + count + ' 次');
+            }, 1000);
+
+            lt = setTimeout(function() {
+                log('setTimeout 只执行这一次');
+            }, 3000);
+        }
+        function stopLogCompare() {
+            if (li) { clearInterval(li); li = null; log('⏹ setInterval 已清除'); }
+            if (lt) { clearTimeout(lt); lt = null; log('⏹ setTimeout 已清除'); }
+        }
+    </script>
+</body>
+</html>
