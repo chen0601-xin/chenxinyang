@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-4 API接口测试工具</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 960px; margin: 20px auto; padding: 0 16px; }
+        h2 { color: #235789; }
+        .panel { border: 1px solid #e5d9c8; border-radius: 12px; padding: 18px; margin-bottom: 18px; background: #fffdf8; }
+        .row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        select, input, textarea, button { font-family: inherit; font-size: 14px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; }
+        select { min-width: 110px; background: #fff; cursor: pointer; }
+        input[type="text"] { flex: 1; min-width: 280px; }
+        textarea { width: 100%; height: 120px; resize: vertical; box-sizing: border-box; font-family: Consolas, monospace; background: #f8fafc; }
+        button { background: #235789; color: #fff; border: none; cursor: pointer; padding: 9px 22px; }
+        button:hover { background: #1a4267; }
+        button.secondary { background: #94a3b8; }
+        button.secondary:hover { background: #64748b; }
+        button:disabled { background: #cbd5e1; cursor: not-allowed; }
+        label { display: block; font-size: 13px; color: #64748b; margin-bottom: 6px; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, monospace; font-size: 13px; line-height: 1.5; }
+        .status-bar { display: flex; gap: 16px; align-items: center; margin-top: 12px; font-size: 13px; color: #64748b; }
+        .status-ok { color: #2ecc71; font-weight: bold; }
+        .status-err { color: #e76f51; font-weight: bold; }
+        .preset { display: inline-block; background: #f6efe2; color: #235789; padding: 4px 10px; border-radius: 12px; font-size: 12px; cursor: pointer; margin: 2px; border: 1px solid transparent; }
+        .preset:hover { border-color: #235789; }
+        .error-block { background: #fff5f5; border-left: 4px solid #e76f51; padding: 12px 14px; border-radius: 4px; color: #c7254e; font-family: Consolas, monospace; white-space: pre-wrap; word-break: break-all; }
+        .section-title { font-weight: bold; color: #17233b; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h2>陈新阳的API接口测试工具</h2>
+    <p>支持 GET / POST / PUT / DELETE / PATCH，使用原生 fetch，实时显示响应和错误。</p>
+
+    <div class="panel">
+        <div class="row">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <select id="method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
+                </select>
+                <input type="text" id="url" value="https://jsonplaceholder.typicode.com/posts" placeholder="输入接口地址">
+            </div>
+            <button id="sendBtn">发送请求</button>
+            <button id="clearBtn" class="secondary">清空</button>
+        </div>
+
+        <div>
+            <span class="section-title">常用预设 (点击使用):</span><br>
+            <span class="preset" data-m="GET" data-u="https://jsonplaceholder.typicode.com/posts">GET posts (10条)</span>
+            <span class="preset" data-m="GET" data-u="https://jsonplaceholder.typicode.com/posts/1">GET posts/1</span>
+            <span class="preset" data-m="POST" data-u="https://jsonplaceholder.typicode.com/posts">POST 新建帖子</span>
+            <span class="preset" data-m="PUT" data-u="https://jsonplaceholder.typicode.com/posts/1">PUT 更新</span>
+            <span class="preset" data-m="DELETE" data-u="https://jsonplaceholder.typicode.com/posts/1">DELETE 删除</span>
+            <span class="preset" data-m="GET" data-u="https://dummyjson.com/products/1">GET product</span>
+        </div>
+    </div>
+
+    <div class="panel" id="bodyPanel">
+        <label class="section-title">请求体 (JSON) — 仅 POST/PUT/PATCH 需要</label>
+        <textarea id="bodyInput" placeholder='{"title": "foo", "body": "bar", "userId": 1}'>{
+    "title": "陈新阳的新帖子",
+    "body": "这是一个通过 fetch POST 创建的帖子",
+    "userId": 1
+}</textarea>
+    </div>
+
+    <div class="panel">
+        <div class="section-title">📡 请求状态</div>
+        <div id="status" class="status-bar">等待发送...</div>
+    </div>
+
+    <div class="panel">
+        <div class="section-title">📋 响应结果</div>
+        <div id="response">—</div>
+    </div>
+
+    <script>
+        var methodSel = document.getElementById('method');
+        var urlInput = document.getElementById('url');
+        var bodyInput = document.getElementById('bodyInput');
+        var sendBtn = document.getElementById('sendBtn');
+        var clearBtn = document.getElementById('clearBtn');
+        var statusBar = document.getElementById('status');
+        var respEl = document.getElementById('response');
+        var bodyPanel = document.getElementById('bodyPanel');
+
+        function updateBodyVisibility() {
+            bodyPanel.style.display = (methodSel.value === 'GET' || methodSel.value === 'DELETE') ? 'none' : 'block';
+        }
+        methodSel.addEventListener('change', updateBodyVisibility);
+        updateBodyVisibility();
+
+        document.querySelectorAll('.preset').forEach(function(el) {
+            el.addEventListener('click', function() {
+                methodSel.value = el.dataset.m;
+                urlInput.value = el.dataset.u;
+                if (el.dataset.m === 'POST') {
+                    bodyInput.value = '{\n    "title": "陈新阳的新帖子",\n    "body": "这是一个通过 fetch POST 创建的帖子",\n    "userId": 1\n}';
+                } else if (el.dataset.m === 'PUT') {
+                    bodyInput.value = '{\n    "id": 1,\n    "title": "更新后的标题",\n    "body": "新的内容",\n    "userId": 1\n}';
+                }
+                updateBodyVisibility();
+            });
+        });
+
+        sendBtn.addEventListener('click', sendRequest);
+        urlInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendRequest(); });
+
+        clearBtn.addEventListener('click', function() {
+            urlInput.value = '';
+            bodyInput.value = '';
+            statusBar.innerHTML = '已清空';
+            respEl.innerHTML = '—';
+        });
+
+        async function sendRequest() {
+            var url = urlInput.value.trim();
+            var method = methodSel.value;
+
+            if (!url) {
+                statusBar.innerHTML = '<span class="status-err">❌ URL 不能为空</span>';
+                return;
+            }
+
+            sendBtn.disabled = true;
+            statusBar.innerHTML = '<span>⏳ 请求中...</span>';
+            respEl.innerHTML = '<span style="color:#64748b;">等待响应...</span>';
+
+            var opts = { method: method, headers: { 'Content-Type': 'application/json' } };
+
+            if (method !== 'GET' && method !== 'DELETE') {
+                var raw = bodyInput.value.trim();
+                if (raw) {
+                    try {
+                        JSON.parse(raw);
+                    } catch (e) {
+                        statusBar.innerHTML = '<span class="status-err">❌ JSON 格式错误: ' + e.message + '</span>';
+                        sendBtn.disabled = false;
+                        return;
+                    }
+                    opts.body = raw;
+                }
+            }
+
+            var start = performance.now();
+
+            try {
+                var res = await fetch(url, opts);
+                var duration = (performance.now() - start).toFixed(0);
+                var text = await res.text();
+                var pretty;
+
+                try { pretty = JSON.stringify(JSON.parse(text), null, 2); }
+                catch (e) { pretty = text || '(空响应)'; }
+
+                var klass = res.ok ? 'status-ok' : 'status-err';
+                statusBar.innerHTML =
+                    '<span class="' + klass + '">' + res.status + ' ' + res.statusText + '</span>' +
+                    '<span>⏱ ' + duration + ' ms</span>' +
+                    '<span>📦 ' + new Blob([text]).size + ' bytes</span>' +
+                    '<span>✅ fetch 成功</span>';
+                respEl.innerHTML = '<pre>' + escapeHtml(pretty) + '</pre>';
+                console.log(method, url, '→', res.status, pretty);
+            } catch (err) {
+                var duration2 = (performance.now() - start).toFixed(0);
+                statusBar.innerHTML =
+                    '<span class="status-err">❌ fetch 失败</span>' +
+                    '<span>⏱ ' + duration2 + ' ms</span>';
+                respEl.innerHTML =
+                    '<div class="error-block">' +
+                        'Error: ' + err.name + '\n' +
+                        'Message: ' + err.message + '\n\n' +
+                        '常见原因:\n' +
+                        '1. 网络不通 / 接口地址错误\n' +
+                        '2. 跨域被拦截 (CORS)\n' +
+                        '3. 接口超时' +
+                    '</div>';
+                console.error('fetch error:', err);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+</html>
