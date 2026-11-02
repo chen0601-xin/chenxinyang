@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-1 展示JSON</title>
+    <style>
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .tag { color: #c7254e; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>陈新阳的JSON展示</h2>
+    <div id="output"></div>
+
+    <script>
+        var out = document.getElementById('output');
+        function show(title, html) {
+            out.innerHTML += '<h3>' + title + '</h3>' + html;
+        }
+
+        // 1. JSON 对象定义
+        var person = {
+            "name": "陈新阳",
+            "age": 20,
+            "gender": "男",
+            "email": "chenxinyang@example.com",
+            "hobby": ["游泳", "阅读", "编程"],
+            "address": {
+                "city": "上海",
+                "street": "人民大道100号"
+            },
+            "isStudent": true,
+            "score": null
+        };
+        show('1. JSON 对象定义',
+            '<p>JavaScript 对象字面量(符合JSON格式):</p>' +
+            '<pre>' + JSON.stringify(person, null, 2) + '</pre>');
+        console.log('person 对象:', person);
+
+        // 2. JSON 数组
+        var students = [
+            { "name": "张三", "age": 19 },
+            { "name": "李四", "age": 21 },
+            { "name": "王五", "age": 20 }
+        ];
+        show('2. JSON 数组',
+            '<p>包含多个对象的JSON数组:</p>' +
+            '<pre>' + JSON.stringify(students, null, 2) + '</pre>');
+        console.log('students 数组:', students);
+
+        // 3. JSON.stringify — 对象转 JSON 字符串
+        var jsonStr = JSON.stringify(person);
+        show('3. JSON.stringify (对象 → 字符串)',
+            '<p>把 person 对象序列化为 JSON 字符串:</p>' +
+            '<pre>"' + jsonStr + '"</pre>' +
+            '<p>type: <span class="tag">' + typeof jsonStr + '</span></p>');
+        console.log('JSON.stringify 结果:', jsonStr);
+
+        // 4. JSON.parse — 字符串转 对象
+        var jsonText = '{"name":"陈新阳","age":20,"skill":"JavaScript"}';
+        var parsed = JSON.parse(jsonText);
+        show('4. JSON.parse (字符串 → 对象)',
+            '<p>JSON 字符串:</p>' +
+            '<pre>' + jsonText + '</pre>' +
+            '<p>解析后的对象:</p>' +
+            '<pre>' + JSON.stringify(parsed, null, 2) + '</pre>' +
+            '<p>parsed.name = ' + parsed.name + '</p>' +
+            '<p>parsed.skill = ' + parsed.skill + '</p>');
+        console.log('JSON.parse 结果:', parsed);
+
+        // 5. 访问和修改 JSON 属性
+        show('5. 访问和修改 JSON 属性',
+            '<p>原对象 person.name = ' + person.name + '</p>' +
+            '<p>person.age = ' + person.age + '</p>' +
+            '<p>修改 person.age 为 21 ...</p>');
+        person.age = 21;
+        person.hobby.push("摄影");
+        show('',
+            '<p>修改后 person.age = ' + person.age + '</p>' +
+            '<p>新增爱好后 hobby = ' + person.hobby.join('、') + '</p>' +
+            '<pre>' + JSON.stringify(person, null, 2) + '</pre>');
+
+        // 6. 遍历 JSON
+        var book = { "title": "高级网页设计", "author": "陈新阳", "pages": 300, "price": 59.9 };
+        var keys = Object.keys(book);
+        var result = [];
+        for (var i = 0; i < keys.length; i++) {
+            result.push(keys[i] + ': ' + book[keys[i]]);
+        }
+        show('6. 遍历 JSON 对象的所有属性',
+            '<pre>' + JSON.stringify(book, null, 2) + '</pre>' +
+            '<p>遍历结果:</p>' +
+            '<ul><li>' + result.join('</li><li>') + '</li></ul>');
+
+        // 7. JSON 与 localStorage (扩展)
+        show('7. 实战: 使用 JSON 存入 localStorage',
+            '<p>模拟保存用户配置到浏览器:</p>');
+        var config = { "theme": "dark", "fontSize": 14, "notifications": true };
+        localStorage.setItem('userConfig', JSON.stringify(config));
+        var saved = JSON.parse(localStorage.getItem('userConfig'));
+        out.innerHTML += '<pre>存储: JSON.stringify(config) = "' + JSON.stringify(config) + '"</pre>';
+        out.innerHTML += '<pre>读取: JSON.parse(...) = ' + JSON.stringify(saved, null, 2) + '</pre>';
+        console.log('localStorage 中的配置:', saved);
+
+        out.innerHTML += '<hr><p><strong>总结:</strong> JSON 是一种轻量级数据交换格式,常配合 JSON.stringify / JSON.parse 用于前后端数据传输。</p>';
+    </script>
+</body>
+</html>

@@ -10,7 +10,8 @@ This skill commits all changes in the current project and pushes them to the con
 ## Target Remote
 
 - URL: `https://github.com/chen0601-xin/chenxinyang.git`
-- SSH key is already configured for authentication.
+- SSH port 22 is blocked in this environment; use HTTPS with `http.sslVerify=false` (already configured locally).
+- SSH auth via `git@github.com:chen0601-xin/chenxinyang.git` will fail with "Connection refused" on port 22.
 
 ## Steps to Execute
 
