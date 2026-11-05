@@ -129,7 +129,6 @@
             gridHelper.position.y = 0;
             scene.add(gridHelper);
 
-            // Generate Bar Data
             var months = 12, cats = 6;
             var data = [];
             for (var m = 0; m < months; m++) {
@@ -140,42 +139,33 @@
             var maxV = Math.max.apply(null, data);
             var minV = Math.min.apply(null, data);
 
-            // Bars (using merged geometry for performance)
-            var barGeo = new THREE.BoxGeometry(1.2, 1, 1.2);
-            var positions = [], colors = [];
-            var colorObj = new THREE.Color();
-
             var offsetX = -months * 1.2 / 2 + 0.6;
             var offsetZ = -cats * 1.2 / 2 + 0.6;
+            var totalBars = months * cats;
 
+            var barGeo = new THREE.BoxGeometry(1.2, 1, 1.2);
+            var barMat = new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true });
+            var mesh = new THREE.InstancedMesh(barGeo, barMat, totalBars);
+
+            var dummy = new THREE.Object3D();
+            var colorObj = new THREE.Color();
             for (var m = 0; m < months; m++) {
                 for (var c = 0; c < cats; c++) {
-                    var v = data[m * cats + c];
+                    var idx = m * cats + c;
+                    var v = data[idx];
                     var h = v / maxV * 15 + 0.3;
-                    var x = offsetX + m * 1.2;
-                    var z = offsetZ + c * 1.2;
-                    var y = h / 2;
-
-                    barGeo.translate(x, y, z);
-                    for (var p = 0; p < barGeo.attributes.position.count; p++) {
-                        positions.push(barGeo.attributes.position.array[p]);
-                    }
-                    barGeo.translate(-x, -y, -z);
-
+                    dummy.position.set(offsetX + m * 1.2, h / 2, offsetZ + c * 1.2);
+                    dummy.scale.set(1, h, 1);
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(idx, dummy.matrix);
                     var ratio = (v - minV) / (maxV - minV);
                     colorObj.setHSL(0.6 - ratio * 0.6, 0.8, 0.5);
-                    for (var p = 0; p < barGeo.attributes.position.count; p++) {
-                        colors.push(colorObj.r, colorObj.g, colorObj.b);
-                    }
+                    mesh.setColorAt(idx, colorObj);
                 }
             }
-            var mergedGeo = new THREE.BufferGeometry();
-            mergedGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            mergedGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-            mergedGeo.computeVertexNormals();
-            var barMat = new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true });
-            var bars = new THREE.Mesh(mergedGeo, barMat);
-            scene.add(bars);
+            mesh.instanceMatrix.needsUpdate = true;
+            if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+            scene.add(mesh);
 
             // Axes Labels (simple sprites via canvas textures)
             function makeLabel(text, color) {
@@ -274,10 +264,11 @@
                 uniforms: {},
                 vertexShader: [
                     'attribute float size;',
+                    'attribute vec3 color;',
                     'varying vec3 vColor;',
                     'void main() {',
                     '    vColor = color;',
-                    '    vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+                    '    vec4 mv = viewMatrix * modelMatrix * vec4(position, 1.0);',
                     '    gl_PointSize = size * (300.0 / -mv.z);',
                     '    gl_Position = projectionMatrix * mv;',
                     '}'
@@ -294,8 +285,7 @@
                 ].join('\n'),
                 transparent: true,
                 depthWrite: false,
-                blending: THREE.AdditiveBlending,
-                vertexColors: true
+                blending: THREE.AdditiveBlending
             });
             var points = new THREE.Points(geo, mat);
             scene.add(points);
