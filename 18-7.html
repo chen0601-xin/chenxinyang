@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-7 Three.js 3D 可视化</title>
+    <style>
+        body { margin: 0; background: #0d1220; font-family: "Microsoft YaHei", sans-serif; color: #e2e8f0; }
+        header { background: #1e3a5f; color: #fff; padding: 24px 40px; }
+        header h1 { margin: 0 0 6px; font-size: 26px; }
+        header p { margin: 0; opacity: .85; font-size: 14px; }
+        .wrap { max-width: 1360px; margin: 0 auto; padding: 20px; }
+        .card {
+            background: #141a2d; border: 1px solid #262f48; border-radius: 14px;
+            padding: 24px; margin-bottom: 24px;
+        }
+        .card h2 { margin: 0 0 4px; font-size: 20px; color: #93c5fd; }
+        .card .desc { color: #94a3b8; font-size: 13px; margin-bottom: 14px; }
+        .tag { display: inline-block; background: #1e3a5f; color: #93c5fd; padding: 3px 10px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
+        .chart-box { height: 560px; border-radius: 8px; overflow: hidden; cursor: grab; }
+        .chart-box:active { cursor: grabbing; }
+        .chart-box canvas { display: block; }
+        .hint { font-size: 12px; color: #64748b; margin-top: 8px; }
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .controls button {
+            background: #1e3a5f; color: #93c5fd; border: 1px solid #2a3f61; padding: 6px 14px;
+            border-radius: 6px; cursor: pointer; font-size: 12px; font-family: inherit;
+        }
+        .controls button:hover { background: #2a4a76; }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <header>
+        <h1>陈新阳 · Three.js 3D 可视化</h1>
+        <p>使用本地 CDN (cdn/three.min.js) · 鼠标拖拽旋转视角 · 滚轮缩放</p>
+    </header>
+    <div class="wrap">
+        <div class="card">
+            <h2>📊 图一：电商销售数据 3D 柱状图</h2>
+            <div class="desc"><span class="tag">Bar3D</span> 12 月 × 6 品类 = 72 根柱子 · 颜色渐变映射高度值</div>
+            <div class="chart-box" id="box1"></div>
+            <div class="hint">💡 鼠标左键 = 旋转视角 · 右键 = 平移 · 滚轮 = 缩放</div>
+        </div>
+
+        <div class="card">
+            <h2>✨ 图二：文本向量 3D 点云 (t-SNE 模拟)</h2>
+            <div class="desc"><span class="tag">PointCloud</span> 2000 个粒子 · 模拟 NLP 向量空间分布 · 5 类彩色簇</div>
+            <div class="chart-box" id="box2"></div>
+            <div class="hint">💡 鼠标拖拽旋转 · 自动缓慢自转 · 每类粒子不同颜色</div>
+        </div>
+    </div>
+
+    <script src="cdn/three.min.js"></script>
+    <script>
+    (function () {
+        function createOrbit(camera, dom) {
+            var state = { dragging: false, panning: false, lx: 0, ly: 0, dist: 40, rotX: 0.3, rotY: 0.5, targetX: 0, targetY: 0, targetDist: 40 };
+            camera.position.set(0, state.targetDist * Math.sin(state.rotX), state.targetDist * Math.cos(state.rotX));
+            camera.lookAt(0, 0, 0);
+            camera.updateProjectionMatrix();
+
+            dom.addEventListener('mousedown', function (e) {
+                state.dragging = e.button === 0;
+                state.panning = e.button === 2;
+                state.lx = e.clientX; state.ly = e.clientY;
+            });
+            dom.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+            window.addEventListener('mouseup', function () { state.dragging = state.panning = false; });
+            window.addEventListener('mousemove', function (e) {
+                var dx = e.clientX - state.lx, dy = e.clientY - state.ly;
+                state.lx = e.clientX; state.ly = e.clientY;
+                if (state.dragging) { state.targetRotY += dx * 0.008; state.targetRotX += dy * 0.008; state.targetRotX = Math.max(-1.2, Math.min(1.2, state.targetRotX)); }
+                if (state.panning) { /* skip */ }
+            });
+            dom.addEventListener('wheel', function (e) { e.preventDefault(); state.targetDist += e.deltaY * 0.05; state.targetDist = Math.max(8, Math.min(200, state.targetDist)); }, { passive: false });
+
+            return { state: state, update: function () {
+                state.rotX += (state.targetRotX - state.rotX) * 0.08;
+                state.rotY += (state.targetRotY - state.rotY) * 0.08;
+                state.dist += (state.targetDist - state.dist) * 0.08;
+                camera.position.set(
+                    state.dist * Math.sin(state.rotX) * Math.sin(state.rotY),
+                    state.dist * Math.cos(state.rotX),
+                    state.dist * Math.sin(state.rotX) * Math.cos(state.rotY)
+                );
+                camera.lookAt(0, 0, 0);
+            }, autoSpin: function (s) { state.targetRotY += s; } };
+        }
+
+        function fitCanvas(canvas, box) {
+            var r = box.getBoundingClientRect();
+            var w = box.clientWidth, h = box.clientHeight;
+            canvas.width = w; canvas.height = h;
+            canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+            return [w, h];
+        }
+
+        // ============ 图一: 3D Bar Chart ============
+        (function barChart() {
+            var box = document.getElementById('box1');
+            var w = box.clientWidth, h = box.clientHeight;
+            var scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0d1220);
+
+            var camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 500);
+            var renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            box.appendChild(renderer.domElement);
+
+            var orbit = createOrbit(camera, renderer.domElement);
+
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+            var dir = new THREE.DirectionalLight(0xffffff, 0.9);
+            dir.position.set(20, 40, 20);
+            scene.add(dir);
+            var fill = new THREE.DirectionalLight(0x6ea8ff, 0.3);
+            fill.position.set(-30, 10, -20);
+            scene.add(fill);
+
+            // Grid / Floor
+            var gridMat = new THREE.MeshBasicMaterial({ color: 0x2a3f61, wireframe: false, transparent: true, opacity: 0.35 });
+            var floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 32), gridMat);
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            var gridHelper = new THREE.GridHelper(40, 10, 0x3b5ba0, 0x1f2a45);
+            gridHelper.position.y = 0;
+            scene.add(gridHelper);
+
+            // Generate Bar Data
+            var months = 12, cats = 6;
+            var data = [];
+            for (var m = 0; m < months; m++) {
+                for (var c = 0; c < cats; c++) {
+                    data.push(2 + Math.random() * 18 + (m > 8 ? 8 : 0) + (c === 0 ? 5 : 0));
+                }
+            }
+            var maxV = Math.max.apply(null, data);
+            var minV = Math.min.apply(null, data);
+
+            // Bars (using merged geometry for performance)
+            var barGeo = new THREE.BoxGeometry(1.2, 1, 1.2);
+            var positions = [], colors = [];
+            var colorObj = new THREE.Color();
+
+            var offsetX = -months * 1.2 / 2 + 0.6;
+            var offsetZ = -cats * 1.2 / 2 + 0.6;
+
+            for (var m = 0; m < months; m++) {
+                for (var c = 0; c < cats; c++) {
+                    var v = data[m * cats + c];
+                    var h = v / maxV * 15 + 0.3;
+                    var x = offsetX + m * 1.2;
+                    var z = offsetZ + c * 1.2;
+                    var y = h / 2;
+
+                    barGeo.translate(x, y, z);
+                    for (var p = 0; p < barGeo.attributes.position.count; p++) {
+                        positions.push(barGeo.attributes.position.array[p]);
+                    }
+                    barGeo.translate(-x, -y, -z);
+
+                    var ratio = (v - minV) / (maxV - minV);
+                    colorObj.setHSL(0.6 - ratio * 0.6, 0.8, 0.5);
+                    for (var p = 0; p < barGeo.attributes.position.count; p++) {
+                        colors.push(colorObj.r, colorObj.g, colorObj.b);
+                    }
+                }
+            }
+            var mergedGeo = new THREE.BufferGeometry();
+            mergedGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            mergedGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            mergedGeo.computeVertexNormals();
+            var barMat = new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true });
+            var bars = new THREE.Mesh(mergedGeo, barMat);
+            scene.add(bars);
+
+            // Axes Labels (simple sprites via canvas textures)
+            function makeLabel(text, color) {
+                var c = document.createElement('canvas');
+                c.width = 128; c.height = 64;
+                var ctx = c.getContext('2d');
+                ctx.fillStyle = color || '#94a3b8';
+                ctx.font = 'bold 40px Microsoft YaHei';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(text, 64, 32);
+                var tex = new THREE.CanvasTexture(c);
+                tex.minFilter = THREE.LinearFilter;
+                var mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+                var sp = new THREE.Sprite(mat);
+                sp.scale.set(3, 1.5, 1);
+                return sp;
+            }
+            var monthLabels = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+            var catLabels = ['电子','服装','食品','家居','美妆','图书'];
+            for (var m = 0; m < months; m++) {
+                var l = makeLabel(monthLabels[m], '#94a3b8');
+                l.position.set(offsetX + m * 1.2, -1.2, offsetZ - 2.5);
+                scene.add(l);
+            }
+            for (var c = 0; c < cats; c++) {
+                var l = makeLabel(catLabels[c], '#94a3b8');
+                l.position.set(offsetX - 2.5, -1.2, offsetZ + c * 1.2);
+                scene.add(l);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                orbit.autoSpin(0.0008);
+                orbit.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            function onResize() {
+                var dim = fitCanvas(renderer.domElement, box);
+                camera.aspect = dim[0] / dim[1];
+                camera.updateProjectionMatrix();
+            }
+            window.addEventListener('resize', onResize);
+            onResize();
+        })();
+
+        // ============ 图二: 3D Point Cloud ============
+        (function pointCloud() {
+            var box = document.getElementById('box2');
+            var w = box.clientWidth, h = box.clientHeight;
+            var scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x080c1a);
+            scene.fog = new THREE.FogExp2(0x080c1a, 0.0035);
+
+            var camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 500);
+            var renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            box.appendChild(renderer.domElement);
+            var orbit = createOrbit(camera, renderer.domElement);
+
+            // Particles - 5 clusters simulating text embeddings
+            var COUNT = 2000;
+            var positions = new Float32Array(COUNT * 3);
+            var colors = new Float32Array(COUNT * 3);
+            var sizes = new Float32Array(COUNT);
+            var clusters = [
+                { cx: -18, cy: 12, cz: -8, color: new THREE.Color(0xff6b6b), spread: 6 },
+                { cx: 14, cy: -8, cz: -12, color: new THREE.Color(0x4ecdc4), spread: 5 },
+                { cx: -12, cy: -14, cz: 16, color: new THREE.Color(0xffe66d), spread: 7 },
+                { cx: 16, cy: 10, cz: 14, color: new THREE.Color(0xa29bfe), spread: 5 },
+                { cx: 2, cy: 0, cz: 0, color: new THREE.Color(0xfd79a8), spread: 4 }
+            ];
+
+            for (var i = 0; i < COUNT; i++) {
+                var cl = clusters[i % clusters.length];
+                positions[i * 3] = cl.cx + (Math.random() - 0.5) * cl.spread * 2;
+                positions[i * 3 + 1] = cl.cy + (Math.random() - 0.5) * cl.spread * 2;
+                positions[i * 3 + 2] = cl.cz + (Math.random() - 0.5) * cl.spread * 2;
+                var cVar = new THREE.Color();
+                cVar.copy(cl.color);
+                cVar.offsetHSL((Math.random() - 0.5) * 0.05, (Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.15);
+                colors[i * 3] = cVar.r;
+                colors[i * 3 + 1] = cVar.g;
+                colors[i * 3 + 2] = cVar.b;
+                sizes[i] = 0.8 + Math.random() * 0.6;
+            }
+
+            var geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            // Custom shader for round glowing points
+            var mat = new THREE.ShaderMaterial({
+                uniforms: {},
+                vertexShader: [
+                    'attribute float size;',
+                    'varying vec3 vColor;',
+                    'void main() {',
+                    '    vColor = color;',
+                    '    vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+                    '    gl_PointSize = size * (300.0 / -mv.z);',
+                    '    gl_Position = projectionMatrix * mv;',
+                    '}'
+                ].join('\n'),
+                fragmentShader: [
+                    'varying vec3 vColor;',
+                    'void main() {',
+                    '    vec2 c = gl_PointCoord - vec2(0.5);',
+                    '    float d = length(c);',
+                    '    if (d > 0.5) discard;',
+                    '    float alpha = smoothstep(0.5, 0.0, d);',
+                    '    gl_FragColor = vec4(vColor, alpha);',
+                    '}'
+                ].join('\n'),
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexColors: true
+            });
+            var points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            // Center coordinate crosshair
+            var axes = new THREE.AxesHelper(20);
+            axes.position.set(0, 0, 0);
+            scene.add(axes);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                points.rotation.y += 0.0015;
+                orbit.autoSpin(0.0003);
+                orbit.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            function onResize() {
+                var dim = fitCanvas(renderer.domElement, box);
+                camera.aspect = dim[0] / dim[1];
+                camera.updateProjectionMatrix();
+            }
+            window.addEventListener('resize', onResize);
+            onResize();
+        })();
+    })();
+    </script>
+</body>
+</html>
