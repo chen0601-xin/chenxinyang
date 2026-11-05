@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-6 Mermaid 智能客服流程图与 ER 图</title>
+    <style>
+        body { margin: 0; background: #f4f6fa; font-family: "Microsoft YaHei", sans-serif; color: #1a2340; }
+        header { background: #1e3a5f; color: #fff; padding: 24px 40px; }
+        header h1 { margin: 0 0 6px; font-size: 26px; }
+        header p { margin: 0; opacity: .85; font-size: 14px; }
+        .wrap { max-width: 1280px; margin: 0 auto; padding: 30px 20px; }
+        .card {
+            background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        }
+        .card h2 { margin: 0 0 4px; font-size: 20px; color: #1e3a5f; }
+        .card .desc { color: #6b7280; font-size: 13px; margin-bottom: 18px; }
+        .tag { display: inline-block; background: #e8f0fb; color: #235789; padding: 3px 10px; border-radius: 10px; font-size: 12px; margin-right: 6px; }
+        .diagram-box { overflow-x: auto; padding: 20px 10px; background: #fbfcfd; border-radius: 8px; border: 1px dashed #cbd5e1; }
+        .diagram-box svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .code-view {
+            background: #1e293b; color: #e2e8f0; padding: 14px 18px; border-radius: 8px;
+            font-family: Consolas, monospace; font-size: 12px; line-height: 1.7; margin-top: 18px;
+            white-space: pre; overflow-x: auto;
+        }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <header>
+        <h1>陈新阳 · Mermaid 系统建模</h1>
+        <p>智能客服知识库系统 · 流程图 (Flowchart) + 实体关系图 (ER Diagram)</p>
+    </header>
+    <div class="wrap">
+
+        <div class="card">
+            <h2>🔄 图一：智能客服对话处理流程图</h2>
+            <div class="desc"><span class="tag">Mermaid</span> flowchart · 用户提问 → 意图识别 → RAG 检索 → LLM 生成 → 答案返回 完整链路</div>
+            <div class="diagram-box">
+                <div class="mermaid">
+flowchart TD
+    A[用户输入问题] --> B{意图识别 Intent}
+    B -->|查询知识| C[加载 RAG 管道]
+    B -->|闲聊| Z[直接 LLM 回复]
+    B -->|投诉/复杂| Y[转人工坐席]
+
+    C --> D{知识库检索}
+    D --> E[向量库 Milvus]
+    D --> F[关键词 ES]
+    D --> G[混合检索 Merge]
+    E & F & G --> H[Rerank 重排序]
+
+    H --> I{召回分数 ≥ 阈值?}
+    I -->|是| J[构建 Prompt]
+    I -->|否| K[触发兜底策略]
+
+    J --> L[LLM 生成答案]
+    L --> M{答案校验 Grounded?}
+    M -->|通过| N[返回答案给用户]
+    M -->|失败| O[标记低置信度] --> N
+
+    K --> P[返回"未找到"]
+    Y --> Q[创建工单 Ticket]
+    Z --> N
+
+    style A fill:#dbeafe,stroke:#1d4ed8
+    style N fill:#bbf7d0,stroke:#15803d
+    style Q fill:#fef3c7,stroke:#d97706
+    style O fill:#fee2e2,stroke:#dc2626
+    style Y fill:#fecaca,stroke:#dc2626
+                </div>
+            </div>
+            <details class="code-view"><summary style="cursor:pointer;color:#94a3b8;">查看 Mermaid 源码</summary>
+flowchart TD
+    A[用户输入问题] --> B{意图识别 Intent}
+    B -->|查询知识| C[加载 RAG 管道]
+    B -->|闲聊| Z[直接 LLM 回复]
+    B -->|投诉/复杂| Y[转人工坐席]
+
+    C --> D{知识库检索}
+    D --> E[向量库 Milvus]
+    D --> F[关键词 ES]
+    D --> G[混合检索 Merge]
+    E & F & G --> H[Rerank 重排序]
+
+    H --> I{召回分数 ≥ 阈值?}
+    I -->|是| J[构建 Prompt]
+    I -->|否| K[触发兜底策略]
+
+    J --> L[LLM 生成答案]
+    L --> M{答案校验 Grounded?}
+    M -->|通过| N[返回答案给用户]
+    M -->|失败| O[标记低置信度] --> N
+
+    K --> P[返回"未找到"]
+    Y --> Q[创建工单 Ticket]
+    Z --> N
+            </details>
+        </div>
+
+        <div class="card">
+            <h2>🗄 图二：知识库系统 ER 实体关系图</h2>
+            <div class="desc"><span class="tag">Mermaid</span> erDiagram · User / Session / Message / Document / FAQ / Ticket / Knowledge 七核心实体</div>
+            <div class="diagram-box">
+                <div class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    USER ||--o{ TICKET : "提交"
+    SESSION ||--o{ MESSAGE : "包含"
+    KNOWLEDGE ||--o{ DOCUMENT : "包含"
+    KNOWLEDGE ||--o{ FAQ : "包含"
+    KNOWLEDGE ||--o{ CHUNK : "包含"
+    DOCUMENT ||--o{ CHUNK : "切分为"
+    FAQ ||--o{ CHUNK : "索引为"
+    CHUNK }o--|| VECTOR : "存入向量"
+
+    USER {
+        bigint id PK
+        string username
+        string phone
+        string wechat
+        datetime created_at
+    }
+    SESSION {
+        bigint id PK
+        bigint user_id FK
+        string intent_label
+        float confidence
+        datetime started_at
+        datetime ended_at
+    }
+    MESSAGE {
+        bigint id PK
+        bigint session_id FK
+        string role
+        text content
+        string vector_id
+        float grounded_score
+    }
+    KNOWLEDGE {
+        bigint id PK
+        string name
+        string version
+        string source_type
+        int total_docs
+        datetime updated_at
+    }
+    DOCUMENT {
+        bigint id PK
+        bigint kb_id FK
+        string title
+        string content
+        string file_path
+        string hash
+        datetime indexed_at
+    }
+    FAQ {
+        bigint id PK
+        bigint kb_id FK
+        string question
+        string answer
+        bigint hits
+    }
+    CHUNK {
+        bigint id PK
+        bigint source_doc_id FK
+        bigint source_faq_id FK
+        text content
+        string embedding_id
+        int token_count
+    }
+    VECTOR {
+        string id PK
+        bigint chunk_id FK
+        float embedding
+    }
+    TICKET {
+        bigint id PK
+        bigint user_id FK
+        bigint session_id FK
+        string status
+        string priority
+        string agent
+        datetime resolved_at
+    }
+                </div>
+            </div>
+            <details class="code-view"><summary style="cursor:pointer;color:#94a3b8;">查看 Mermaid 源码</summary>
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    USER ||--o{ TICKET : "提交"
+    SESSION ||--o{ MESSAGE : "包含"
+    KNOWLEDGE ||--o{ DOCUMENT : "包含"
+    KNOWLEDGE ||--o{ FAQ : "包含"
+    KNOWLEDGE ||--o{ CHUNK : "包含"
+    DOCUMENT ||--o{ CHUNK : "切分为"
+    FAQ ||--o{ CHUNK : "索引为"
+    CHUNK }o--|| VECTOR : "存入向量"
+            </details>
+        </div>
+
+        <div class="card" style="background:#fffbeb;border-color:#fcd34d;">
+            <h2 style="color:#92400e;">📘 Mermaid 语法速查</h2>
+            <div class="desc">本页使用 <code>cdn/mermaid.min.js</code> 本地加载</div>
+<pre style="background:#fff;color:#78350f;padding:14px;border-radius:6px;font-family:Consolas,monospace;font-size:12px;line-height:1.8;margin:0;">// 流程图 flowchart
+graph TD;  // TD=上到下 LR=左到右
+    A[矩形节点] --> B{判断菱形};
+    B -->|条件1| C((圆形));
+    B -->|条件2| D[[子图]];
+
+// ER 图 erDiagram
+erDiagram
+    PARENT ||--o{ CHILD : "0或多"
+    ONE ||--|| ONE2 : "1对1"
+    MANY }o--|| ONE : "多对1"
+    ENTITY { type name PK "主键说明" }
+
+// 类图、时序图、甘特图、饼图 同样支持</pre>
+        </div>
+    </div>
+
+    <script src="cdn/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: 'Microsoft YaHei, sans-serif',
+            flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: true },
+            er: { useMaxWidth: true }
+        });
+    </script>
+</body>
+</html>
