@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闲鱼 gooffish.com - 闲不住，上闲鱼</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FFD100'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23222'%3E%E9%97%B2%3C/text%3E%3C/svg%3E">
+    <style>
+        /* =========全局公共CSS========= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f5f5f5;
+            font-family: "Microsoft Yahei", system-ui, sans-serif;
+            color: #333;
+        }
+        ul {
+            list-style: none;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            display: block;
+        }
+
+        /* =========顶部导航栏 flex========= */
+        .top-header {
+            background-color: #ffd100;
+        }
+        .header-wrap {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            height: 60px;
+            padding: 0 20px;
+            gap: 24px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            color: #222;
+        }
+        .search-box {
+            flex: 1;
+            display: flex;
+        }
+        .search-box input {
+            flex:1;
+            height:36px;
+            border:none;
+            padding:0 12px;
+            border-radius:4px 0 0 4px;
+            font-size:16px;
+        }
+        .search-btn {
+            height:36px;
+            background:#ff6700;
+            color:#fff;
+            border:none;
+            border-radius:0 4px 4px 0;
+            padding:0 22px;
+            cursor:default;
+        }
+        .header-menu {
+            display:flex;
+            gap:26px;
+            font-size:14px;
+        }
+
+        /* =========主体布局：左侧分类 + 主内容 flex========= */
+        .main-wrap {
+            max-width:1300px;
+            margin:16px auto;
+            display:flex;
+            gap:16px;
+            padding:0 20px;
+        }
+
+        /* 左侧垂直分类导航（导航模块） */
+        .left-category {
+            width:180px;
+            background:#ffffff;
+            border-radius:6px;
+            padding:12px 0;
+        }
+        .left-category li {
+            padding:10px 16px;
+            font-size:14px;
+        }
+
+        /* 右侧主区域 */
+        .right-content {
+            flex:1;
+        }
+
+        /* =========上图下文商品卡片列表 flex-wrap多行========= */
+        .goods-title {
+            font-size:17px;
+            margin-bottom:14px;
+            font-weight:bold;
+        }
+        .card-grid {
+            display:flex;
+            flex-wrap:wrap;
+            gap:14px;
+            margin-bottom:40px;
+        }
+        .goods-card {
+            width:185px;
+            background:#fff;
+            border-radius:8px;
+            overflow:hidden;
+        }
+        .card-img {
+            width:100%;
+            height:180px;
+            object-fit:cover;
+        }
+        .card-info {
+            padding:10px;
+        }
+        .card-name {
+            font-size:14px;
+            /*单行文字溢出省略号 预习考点*/
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            margin-bottom:6px;
+        }
+        .card-price {
+            color:#ff4400;
+            font-size:17px;
+            font-weight:bold;
+        }
+        .card-addr {
+            font-size:12px;
+            color:#999;
+            margin-top:4px;
+        }
+
+        /* =========左图右文 商品详情模块========= */
+        .row-item {
+            background:#fff;
+            border-radius:8px;
+            display:flex;
+            gap:16px;
+            padding:16px;
+        }
+        .row-img-wrap {
+            width:360px;
+        }
+        .row-img {
+            width:100%;
+            height:320px;
+            object-fit:cover;
+            border-radius:6px;
+        }
+        .row-text-wrap {
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+        }
+        .row-title-big {
+            font-size:20px;
+            font-weight:bold;
+            margin-bottom:12px;
+        }
+        .row-big-price {
+            color:#ff4400;
+            font-size:28px;
+            font-weight:bold;
+            margin-bottom:12px;
+        }
+        .row-desc {
+            font-size:14px;
+            color:#666;
+            line-height:1.7;
+        }
+        .row-seller {
+            font-size:13px;
+            color:#888;
+            margin-top:20px;
+        }
+
+        /* =========移动端响应式适配（保持flex布局）========= */
+        @media (max-width: 920px) {
+            .header-wrap {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 16px;
+                row-gap: 10px;
+            }
+            .header-menu {
+                gap: 18px;
+                font-size: 13px;
+            }
+            .search-box {
+                order: 3;
+                flex-basis: 100%;
+            }
+            .main-wrap {
+                flex-direction: column;
+            }
+            .left-category {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .left-category li {
+                padding: 8px 14px;
+            }
+            .card-grid {
+                gap: 10px;
+            }
+            .goods-card {
+                width: calc(50% - 5px);
+            }
+            .card-img {
+                height: 150px;
+            }
+            .row-item {
+                flex-direction: column;
+            }
+            .row-img-wrap {
+                width: 100%;
+            }
+            .row-img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<!--顶部头部-->
+<header class="top-header">
+    <div class="header-wrap">
+        <div class="logo-text">闲鱼</div>
+        <div class="search-box">
+            <input type="text" placeholder="搜索闲置宝贝">
+            <span class="search-btn">搜索</span>
+        </div>
+        <ul class="header-menu">
+            <li>登录</li>
+            <li>发布闲置</li>
+            <li>消息</li>
+            <li>我的</li>
+        </ul>
+    </div>
+</header>
+
+<!--主体：左侧分类 + 右侧内容-->
+<main class="main-wrap">
+    <!--左侧垂直分类导航【导航元素】-->
+    <aside class="left-category">
+        <ul>
+            <li>📱手机数码</li>
+            <li>👔服饰箱包</li>
+            <li>📺家电家具</li>
+            <li>🎮潮玩游戏</li>
+            <li>👶母婴用品</li>
+            <li>💄美妆个护</li>
+            <li>📚图书教材</li>
+            <li>🐱宠物周边</li>
+            <li>🚗电动车汽车</li>
+        </ul>
+    </aside>
+
+    <!--右侧内容区域-->
+    <section class="right-content">
+        <!--上图下文商品卡片【上图下文布局，带图片】-->
+        <h3 class="goods-title">猜你喜欢</h3>
+        <div class="card-grid">
+            <div class="goods-card">
+                <img class="card-img" src="assets/earphone.jpg" alt="蓝牙耳机">
+                <div class="card-info">
+                    <div class="card-name">无线降噪蓝牙耳机几乎全新全套配件</div>
+                    <div class="card-price">¥99</div>
+                    <div class="card-addr">大连</div>
+                </div>
+            </div>
+            <div class="goods-card">
+                <img class="card-img" src="assets/book.jpg" alt="笔记本">
+                <div class="card-info">
+                    <div class="card-name">计算机本科全套教材几乎无笔迹</div>
+                    <div class="card-price">¥55</div>
+                    <div class="card-addr">沈阳</div>
+                </div>
+            </div>
+            <div class="goods-card">
+                <img class="card-img" src="assets/bag.jpg" alt="电脑包">
+                <div class="card-info">
+                    <div class="card-name">15.6寸双肩电脑防震背包</div>
+                    <div class="card-price">¥36</div>
+                    <div class="card-addr">长春</div>
+                </div>
+            </div>
+            <div class="goods-card">
+                <img class="card-img" src="assets/keyboard.jpg" alt="键盘">
+                <div class="card-info">
+                    <div class="card-name">青轴机械键盘，手感很好无坏键</div>
+                    <div class="card-price">¥130</div>
+                    <div class="card-addr">哈尔滨</div>
+                </div>
+            </div>
+        </div>
+
+        <!--左图右文商品详情【左图右文布局，带图片】-->
+        <h3 class="goods-title">商品详情（左图右文）</h3>
+        <div class="row-item">
+            <div class="row-img-wrap">
+                <img class="row-img" src="assets/tablet.jpg" alt="二手平板">
+            </div>
+            <div class="row-text-wrap">
+                <div>
+                    <div class="row-title-big">平板电脑 自用闲置，追剧上网课流畅</div>
+                    <div class="row-big-price">¥420</div>
+                    <div class="row-desc">
+                        自用平板，功能全部正常，屏幕完好无裂痕。平时看视频上网课使用，电池状态尚可。配件包含充电线，实物如图，本地支持自提。
+                    </div>
+                </div>
+                <div class="row-seller">卖家：闲置玩家 | 所在地：大连</div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
