@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      h2,h3,p{
+        padding: 0;
+        margin: 0;
+      }
+      #box{
+        width: 480px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 12px;
+        margin:20px;
+      }
+
+     #box h3{
+        font-size: 20px;
+        line-height: 30px;
+        text-align:center;
+        color: #100;
+      }
+      #box p{
+       line-height:150%;
+       color: #666;
+       text-indent: 2em;
+      }
+      #box a{
+        color: #00f;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      #box .student-id{
+        color: #00f;
+        font-weight: bold;
+      }
+      #box .Cname{
+        color: #222;
+        font-weight: bold;
+      }
+      #box .difficulty{
+        color: #f00;
+        font-weight: bold;
+      }
+      #box .knowledge-points{
+        border: 1px solid #800080;
+        padding: 2px 4px;
+      }
+    </style>
+</head>
+<body>
+    <h2>css进阶</h2>
+    <div id="box">  
+        <h3>css那些事</h3>
+        <p>
+          学号：<span class="student-id">0215</span>,姓名：<span class="Cname">陈新阳</span>,班级：计算机24002，对于《高级网络设计》课程的难度认知为：<span class="difficulty">难</span>，
+          这个例子对应的知识点是：<span class="knowledge-points">群组选择器、后代选择器、层叠与继承</span>。
+<a href="#">更多>> </a>
+        </p>
+<!-- 学号：蓝色加粗；姓名：深色加粗，难度的值:红色加粗，知识点，紫色边框，边框为额外内容，使用内部css-->
+    </div>
+</body>
+</html>

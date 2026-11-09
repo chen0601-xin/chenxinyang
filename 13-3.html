@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iconfont 字体图标导航 - 陈新阳</title>
+    <link rel="stylesheet" href="font/download/iconfont.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f6f9;
+            color: #2c3e50;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        .header {
+            background: linear-gradient(135deg, #389BFF, #6366f1);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 18px; }
+        .header p { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+        .content {
+            padding: 20px;
+        }
+        .demo-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .demo-section h2 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 12px;
+            border-left: 3px solid #389BFF;
+            padding-left: 10px;
+        }
+        .demo-section p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .iconfont-demo {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .iconfont-demo .demo-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .iconfont-demo .demo-icon i {
+            font-size: 28px;
+            color: #389BFF;
+        }
+        .iconfont-demo .demo-icon span {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            display: flex;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            z-index: 100;
+        }
+        .tabbar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0 6px;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .tabbar-item i {
+            font-size: 22px;
+            color: #999;
+            transition: color 0.2s;
+        }
+        .tabbar-item span {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+            transition: color 0.2s;
+        }
+        .tabbar-item.active i,
+        .tabbar-item.active span {
+            color: #389BFF;
+        }
+        .badge {
+            position: absolute;
+            top: 2px;
+            right: calc(50% - 20px);
+            background: #ff4d4f;
+            color: #fff;
+            font-size: 10px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            font-style: normal;
+            font-weight: bold;
+        }
+        .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 16px);
+            width: 8px;
+            height: 8px;
+            background: #ff4d4f;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>移动端底部导航</h1>
+        <p>iconfont 字体图标方案</p>
+    </div>
+
+    <div class="content">
+        <div class="demo-section">
+            <h2>字体图标原理</h2>
+            <p>通过 @font-face 引入字体文件，使用 CSS content 属性渲染图标，可像文字一样设置颜色和大小。</p>
+            <div class="iconfont-demo">
+                <div class="demo-icon"><i class="iconfont icon-shouye"></i><span>首页</span></div>
+                <div class="demo-icon"><i class="iconfont icon-goumai"></i><span>购物</span></div>
+                <div class="demo-icon"><i class="iconfont icon-xiaoxi"></i><span>消息</span></div>
+                <div class="demo-icon"><i class="iconfont icon-wode"></i><span>我的</span></div>
+            </div>
+        </div>
+        <div class="demo-section">
+            <h2>徽章与红点</h2>
+            <p>右上角数字徽章使用 .badge 类，红点使用 .badge-dot 类，通过绝对定位悬浮在图标右上方。</p>
+        </div>
+        <div class="demo-section">
+            <h2>自适应宽度</h2>
+            <p>导航项使用 flex: 1 均分宽度，无论屏幕宽度如何变化，四项始终等宽排列。</p>
+        </div>
+    </div>
+
+    <nav class="tabbar">
+        <div class="tabbar-item active">
+            <i class="iconfont icon-shouye"></i>
+            <span>首页</span>
+        </div>
+        <div class="tabbar-item">
+            <i class="iconfont icon-goumai"></i>
+            <span>购物</span>
+            <em class="badge">8</em>
+        </div>
+        <div class="tabbar-item">
+            <i class="iconfont icon-xiaoxi"></i>
+            <span>消息</span>
+            <i class="badge-dot"></i>
+        </div>
+        <div class="tabbar-item">
+            <i class="iconfont icon-wode"></i>
+            <span>我的</span>
+            <em class="badge">99+</em>
+        </div>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>背景颜色动画</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			padding: 32px;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			gap: 48px;
+			background: #f3f5f7;
+			font-family: sans-serif;
+		}
+ 
+		.box {
+			width: min(180px, 70vw);
+			aspect-ratio: 1;
+			border-radius: 16px;
+			animation: color-cycle 8s infinite, bounce 1.8s ease-in-out infinite, rotate 5s linear infinite;
+		}
+
+		@keyframes color-cycle {
+			0%, 100% { background-color: #e74c3c; }
+			25% { background-color: #f39c12; }
+			50% { background-color: #3498db; }
+			75% { background-color: #2ecc71; }
+		}
+
+		@keyframes bounce {
+			0%, 100% { translate: 0 0; }
+			50% { translate: 0 -28px; }
+		}
+
+		@keyframes rotate {
+			to { rotate: 360deg; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.box {
+				animation: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="box"></div>
+</body>
+</html>

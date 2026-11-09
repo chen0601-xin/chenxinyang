@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-6 Promise与async/await异步流程</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 820px; margin: 20px auto; padding: 0 16px; }
+        h2 { color: #235789; }
+        .panel { border: 1px solid #e5d9c8; border-radius: 12px; padding: 18px; margin-bottom: 18px; background: #fffdf8; }
+        .flow { display: flex; flex-direction: column; gap: 12px; }
+        .step {
+            padding: 12px 16px; border-radius: 10px; background: #f1f5f9; color: #64748b;
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 4px solid #cbd5e1; transition: all .3s;
+        }
+        .step.running { background: #fef9c3; color: #92400e; border-left-color: #e9b949; }
+        .step.done { background: #dcfce7; color: #166534; border-left-color: #2ecc71; }
+        .step.failed { background: #fee2e2; color: #991b1b; border-left-color: #e76f51; }
+        .step.parallel { background: #ede9fe; border-left-color: #7c3aed; color: #4c1d95; }
+        .step .label { font-weight: bold; font-size: 15px; }
+        .step .status { font-size: 13px; font-family: Consolas, monospace; }
+        .arrow { text-align: center; color: #235789; font-size: 22px; line-height: 1; }
+        .parallel-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .timeline { background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 8px; font-family: Consolas, monospace; font-size: 12px; height: 200px; overflow-y: auto; }
+        .btn { padding: 10px 24px; background: #235789; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; }
+        .btn:hover { background: #1a4267; }
+        .btn.stop { background: #e76f51; }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; }
+        .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .dot.running { background: #e9b949; animation: blink 1s infinite; }
+        .dot.done { background: #2ecc71; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+    </style>
+</head>
+<body>
+    <h2>陈新阳的Promise与async/await异步演示</h2>
+    <h3>🥟 包饺子流程 (Promise + async/await)</h3>
+    <p>流程: 买原料(6s) → 取原料(1s) → 并行[和面(4s)、和馅(3s)] → 包饺子(5s) → 吃饺子(2s)</p>
+
+    <div class="panel">
+        <button class="btn" id="startBtn">▶ 开始包饺子</button>
+        <button class="btn stop" id="resetBtn">🔄 重置</button>
+    </div>
+
+    <div class="panel">
+        <h4>📊 流程进度</h4>
+        <div class="flow" id="flowArea">
+            <div class="step" id="s-buy"><span><span class="dot" id="d-buy"></span><span class="label">① 买原料</span> (6s)</span><span class="status" id="st-buy">等待中</span></div>
+            <div class="arrow">↓</div>
+            <div class="step" id="s-fetch"><span><span class="dot" id="d-fetch"></span><span class="label">② 取原料</span> (1s)</span><span class="status" id="st-fetch">等待中</span></div>
+            <div class="arrow">↓</div>
+            <div class="step parallel" style="flex-direction:column;align-items:stretch;">
+                <div style="font-weight:bold;color:#4c1d95;margin-bottom:8px;">③ 并行制作 (Promise.all)</div>
+                <div class="parallel-box">
+                    <div class="step parallel" id="s-dough"><span><span class="dot" id="d-dough"></span><span class="label">和面</span> (4s)</span><span class="status" id="st-dough">等待中</span></div>
+                    <div class="step parallel" id="s-veg"><span><span class="dot" id="d-veg"></span><span class="label">和馅</span> (3s)</span><span class="status" id="st-veg">等待中</span></div>
+                </div>
+            </div>
+            <div class="arrow">↓</div>
+            <div class="step" id="s-make"><span><span class="dot" id="d-make"></span><span class="label">④ 包饺子</span> (5s)</span><span class="status" id="st-make">等待中</span></div>
+            <div class="arrow">↓</div>
+            <div class="step" id="s-eat"><span><span class="dot" id="d-eat"></span><span class="label">⑤ 吃饺子 🥟</span> (2s)</span><span class="status" id="st-eat">等待中</span></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h4>⏱ 实时时间线</h4>
+        <div class="timeline" id="timeline"></div>
+    </div>
+
+    <div class="panel">
+        <h4>📖 核心代码</h4>
+<pre>
+// Promise 包装 setTimeout
+function delay(msg, sec) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(msg + ' 完成!');
+        }, sec * 1000);
+    });
+}
+
+// async/await 串行 + Promise.all 并行
+async function makeDumplings() {
+    await delay('买原料', 6);
+    await delay('取原料', 1);
+    // 两个任务同时开始
+    await Promise.all([
+        delay('和面', 4),
+        delay('和馅', 3)
+    ]);
+    await delay('包饺子', 5);
+    await delay('吃饺子', 2);
+}
+</pre>
+    </div>
+
+    <script>
+        var startBtn = document.getElementById('startBtn');
+        var resetBtn = document.getElementById('resetBtn');
+        var timeline = document.getElementById('timeline');
+
+        function setStep(id, state, statusText) {
+            var el = document.getElementById('s-' + id);
+            var dot = document.getElementById('d-' + id);
+            var st = document.getElementById('st-' + id);
+            el.className = 'step' + (state === 'running' ? ' running' : state === 'done' ? ' done' : state === 'failed' ? ' failed' : '');
+            if (id === 'dough' || id === 'veg') el.className += ' parallel';
+            dot.className = 'dot ' + (state === 'running' ? 'running' : state === 'done' ? 'done' : '');
+            st.textContent = statusText || state;
+        }
+
+        function log(msg) {
+            var t = new Date().toLocaleTimeString('zh-CN');
+            timeline.innerHTML += '[' + t + '] ' + msg + '\n';
+            timeline.scrollTop = timeline.scrollHeight;
+            console.log(msg);
+        }
+
+        function promiseDelay(stepId, label, sec) {
+            setStep(stepId, 'running', '进行中... (' + sec + 's)');
+            log('▶ 开始: ' + label + ' (预计 ' + sec + 's)');
+            var start = Date.now();
+            return new Promise(function(resolve) {
+                setTimeout(function() {
+                    var dur = ((Date.now() - start) / 1000).toFixed(1);
+                    setStep(stepId, 'done', '✅ 完成 ' + dur + 's');
+                    log('✅ 完成: ' + label + ' (' + dur + 's)');
+                    resolve(label);
+                }, sec * 1000);
+            });
+        }
+
+        async function makeDumplings() {
+            startBtn.disabled = true;
+            log('========== 包饺子流程开始 ==========');
+
+            await promiseDelay('buy', '买原料', 6);
+            await promiseDelay('fetch', '取原料', 1);
+
+            log('⚡ 开始并行: 和面 + 和馅');
+            var p1 = promiseDelay('dough', '和面', 4);
+            var p2 = promiseDelay('veg', '和馅', 3);
+            await Promise.all([p1, p2]);
+            log('⚡ 两个并行任务都完成!');
+
+            await promiseDelay('make', '包饺子', 5);
+            await promiseDelay('eat', '吃饺子 🥟', 2);
+
+            log('========== 🎉 全部流程完成! ==========');
+            startBtn.disabled = false;
+        }
+
+        startBtn.addEventListener('click', makeDumplings);
+        resetBtn.addEventListener('click', function() {
+            ['buy','fetch','dough','veg','make','eat'].forEach(function(id) {
+                setStep(id, '', '等待中');
+            });
+            timeline.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

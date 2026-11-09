@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17-2 fetch获取接口数据</title>
+    <style>
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 10px 24px; font-size: 16px; cursor: pointer; background: #235789; color: #fff; border: none; border-radius: 6px; }
+        button:hover { background: #1a4267; }
+        button:disabled { background: #94a3b8; cursor: not-allowed; }
+        .dog-img { max-width: 400px; max-height: 400px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-top: 12px; }
+        .loading { color: #64748b; font-style: italic; }
+        .error { color: #c7254e; }
+    </style>
+</head>
+<body>
+    <h2>陈新阳的fetch获取接口数据</h2>
+    <p>接口: <code>https://dog.ceo/api/breeds/image/random</code> (返回随机狗狗图片)</p>
+
+    <button id="fetchBtn">🐕 获取新图片</button>
+    <button id="fetchErrorBtn">故意请求错误接口</button>
+
+    <h3>1. 原生 fetch + then 链式调用</h3>
+    <div id="result1"><span class="loading">等待请求...</span></div>
+
+    <h3>2. fetch + async/await (推荐)</h3>
+    <div id="result2"><span class="loading">等待请求...</span></div>
+
+    <h3>3. 狗狗图片展示</h3>
+    <div id="result3"><span class="loading">等待请求...</span></div>
+
+    <script>
+        var apiUrl = 'https://dog.ceo/api/breeds/image/random';
+        var btn = document.getElementById('fetchBtn');
+        var errBtn = document.getElementById('fetchErrorBtn');
+
+        // 方式1: fetch + .then() 链式调用
+        function fetchWithThen() {
+            document.getElementById('result1').innerHTML = '<span class="loading">请求中...</span>';
+            fetch(apiUrl)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP 错误: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('fetch then 结果:', data);
+                    document.getElementById('result1').innerHTML =
+                        '<p>✅ 请求成功!</p>' +
+                        '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                })
+                .catch(function(err) {
+                    console.error('fetch then 错误:', err);
+                    document.getElementById('result1').innerHTML =
+                        '<p class="error">❌ 请求失败: ' + err.message + '</p>';
+                });
+        }
+
+        // 方式2: fetch + async/await
+        async function fetchWithAsync() {
+            document.getElementById('result2').innerHTML = '<span class="loading">请求中...</span>';
+            try {
+                var response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('HTTP 错误: ' + response.status);
+                }
+                var data = await response.json();
+                console.log('fetch async 结果:', data);
+                document.getElementById('result2').innerHTML =
+                    '<p>✅ 请求成功!</p>' +
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+
+                document.getElementById('result3').innerHTML =
+                    '<img class="dog-img" src="' + data.message + '" alt="随机狗狗">' +
+                    '<p>图片地址: <a href="' + data.message + '" target="_blank">' + data.message + '</a></p>';
+            } catch (err) {
+                console.error('fetch async 错误:', err);
+                document.getElementById('result2').innerHTML =
+                    '<p class="error">❌ 请求失败: ' + err.message + '</p>';
+                document.getElementById('result3').innerHTML =
+                    '<p class="error">图片加载失败</p>';
+            }
+        }
+
+        // 错误演示
+        async function fetchErrorDemo() {
+            document.getElementById('result1').innerHTML = '<span class="loading">请求错误接口...</span>';
+            document.getElementById('result2').innerHTML = '<span class="loading">请求错误接口...</span>';
+            try {
+                var res = await fetch('https://dog.ceo/api/breed/not-exist/images');
+                var data = await res.json();
+                document.getElementById('result1').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                document.getElementById('result2').innerHTML = '<p>状态 OK, 但接口返回了错误信息</p>';
+            } catch (err) {
+                document.getElementById('result1').innerHTML = '<p class="error">❌ 捕获错误: ' + err.message + '</p>';
+                document.getElementById('result2').innerHTML = '<p class="error">❌ 捕获错误: ' + err.message + '</p>';
+            }
+        }
+
+        btn.addEventListener('click', function() {
+            btn.disabled = true;
+            fetchWithThen();
+            fetchWithAsync();
+            setTimeout(function() { btn.disabled = false; }, 1000);
+        });
+
+        errBtn.addEventListener('click', fetchErrorDemo);
+
+        // 页面加载时自动请求一次
+        fetchWithThen();
+        fetchWithAsync();
+    </script>
+</body>
+</html>

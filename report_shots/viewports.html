@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>响应式测试 · 不同视口</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: #fff; color: #1f2328; padding: 22px 26px 18px; width: 1330px;
+  }
+  .hd { display: flex; align-items: baseline; border-bottom: 2px solid #FF6600; padding-bottom: 10px; }
+  .hd h1 { font-size: 19px; font-weight: 700; }
+  .hd span { margin-left: auto; font-size: 12px; color: #8a8f98; }
+  .row { display: flex; align-items: flex-end; gap: 22px; margin-top: 22px; }
+  .item { text-align: center; }
+  .frame {
+    overflow: hidden; background: #f4f6f9;
+    border: 1px solid #dfe3e8; border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(15, 35, 70, .08);
+    position: relative;
+  }
+  .frame iframe { border: 0; display: block; transform-origin: top left; }
+  .cap { margin-top: 9px; font-size: 12.5px; font-weight: 600; color: #33383f; }
+  .cap em { display: block; font-style: normal; font-size: 11px; color: #9aa0a8; margin-top: 2px; }
+  .ft { margin-top: 16px; font-size: 11.5px; color: #8a8f98; border-top: 1px dashed #e6e8eb; padding-top: 9px; }
+</style>
+</head>
+<body>
+  <div class="hd">
+    <h1>响应式测试：不同视口下的底部导航</h1>
+    <span>浏览器：Microsoft Edge（Chromium 内核）　设备模拟缩放 100%</span>
+  </div>
+  <div class="row" id="row"></div>
+  <div class="ft">四个视口均使用同一份 13-5.html，未针对单个尺寸写死像素；导航项按 flex:1 等分，中央圆形按钮通过 position:absolute 上浮 12px，在任何宽度下都不挤压相邻项。</div>
+
+<script>
+  var devices = [
+    { w: 320,  h: 568,  label: "320 × 568", name: "iPhone SE",        scale: .845 },
+    { w: 375,  h: 667,  label: "375 × 667", name: "iPhone 8",         scale: .720 },
+    { w: 414,  h: 736,  label: "414 × 736", name: "iPhone 11 大屏",   scale: .652 },
+    { w: 768,  h: 1024, label: "768 × 1024", name: "iPad 竖屏",       scale: .469 }
+  ];
+  var row = document.getElementById("row");
+  devices.forEach(function (d) {
+    var box = document.createElement("div");
+    box.className = "item";
+    var dw = Math.round(d.w * d.scale), dh = Math.round(d.h * d.scale);
+    box.innerHTML =
+      '<div class="frame" style="width:' + dw + 'px;height:' + dh + 'px">' +
+        '<iframe src="../13-5.html" style="width:' + d.w + 'px;height:' + d.h + 'px;transform:scale(' + d.scale + ')"></iframe>' +
+      '</div>' +
+      '<div class="cap">' + d.label + '<em>' + d.name + '</em></div>';
+    row.appendChild(box);
+  });
+</script>
+</body>
+</html>

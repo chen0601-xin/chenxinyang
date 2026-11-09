@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web前端长度单位 - 陈新阳</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f4f6f9;
+            color: #2c3e50;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 28px; margin-bottom: 10px; color: #1a5276; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 36px; }
+        .unit-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 5px solid #2980b9;
+        }
+        .unit-card h2 { font-size: 20px; margin-bottom: 8px; color: #1a5276; }
+        .unit-card p { font-size: 14px; color: #555; line-height: 1.8; }
+        .unit-card code {
+            background: #eef2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #c0392b;
+        }
+        .demo-box {
+            margin-top: 14px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px dashed #bdc3c7;
+        }
+        .demo-box label { font-size: 12px; color: #95a5a6; display: block; margin-bottom: 6px; }
+        .demo {
+            background: #d6eaf8;
+            border: 1px solid #2980b9;
+            border-radius: 4px;
+            padding: 8px 12px;
+            display: inline-block;
+            font-size: 13px;
+            color: #1a5276;
+        }
+        .category {
+            font-size: 13px;
+            color: #fff;
+            background: #2980b9;
+            border-radius: 12px;
+            padding: 2px 10px;
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web 前端长度单位</h1>
+        <p class="subtitle">陈新阳 · 高级网页设计课堂实践 11-1</p>
+
+        <div class="unit-card">
+            <h2>px（像素）<span class="category">绝对单位</span></h2>
+            <p>CSS 像素，是最常用的绝对长度单位。1px 对应屏幕上的一个物理像素点（实际渲染受设备像素比影响）。</p>
+            <div class="demo-box">
+                <label>示例：width: 200px</label>
+                <div class="demo" style="width: 200px;">200px 宽度</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>%（百分比）<span class="category">相对单位</span></h2>
+            <p>相对于父元素对应属性的百分比。常用于流式布局、响应式设计。</p>
+            <div class="demo-box">
+                <label>示例：width: 50%</label>
+                <div class="demo" style="width: 50%;">50% 宽度</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>em<span class="category">相对单位</span></h2>
+            <p>相对于当前元素的字体大小。若当前元素 <code>font-size: 16px</code>，则 <code>1em = 16px</code>，<code>2em = 32px</code>。常用于内边距、外边距的相对设置。</p>
+            <div class="demo-box">
+                <label>示例：font-size: 16px; padding: 1em</label>
+                <div class="demo" style="font-size: 16px; padding: 1em; border: 2px solid #c0392b;">1em 内边距</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>rem<span class="category">相对单位</span></h2>
+            <p>相对于根元素（<code>&lt;html&gt;</code>）的字体大小，默认 <code>1rem = 16px</code>。不受父元素影响，适合统一缩放布局。</p>
+            <div class="demo-box">
+                <label>示例：font-size: 1.5rem（根字体 16px → 24px）</label>
+                <div class="demo" style="font-size: 1.5rem;">1.rem 字号</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>vw / vh<span class="category">视口单位</span></h2>
+            <p><code>1vw</code> = 视口宽度的 1%，<code>1vh</code> = 视口高度的 1%。常用于全屏布局、响应式排版。</p>
+            <div class="demo-box">
+                <label>示例：width: 50vw; height: 30vh</label>
+                <div class="demo" style="width: 50vw; height: 30vh; border: 2px solid #27ae60; display: flex; align-items: center; justify-content: center;">50vw × 30vh</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>vmin / vmax<span class="category">视口单位</span></h2>
+            <p><code>1vmin</code> = 视口宽高中较小值的 1%，<code>1vmax</code> = 较大值的 1%。可用于自适应正方形、动态字号。</p>
+            <div class="demo-box">
+                <label>示例：width: 30vmin; height: 30vmin</label>
+                <div class="demo" style="width: 30vmin; height: 30vmin; border: 2px solid #8e44ad; display: flex; align-items: center; justify-content: center;">30vmin 正方形</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>ch<span class="category">相对单位</span></h2>
+            <p>相对于当前元素字体中 "0" 字符的宽度。常用于限制文本列宽（如 <code>max-width: 60ch</code>）以获得最佳阅读体验。</p>
+            <div class="demo-box">
+                <label>示例：max-width: 40ch</label>
+                <div class="demo" style="max-width: 40ch; font-family: monospace; border: 1px solid #d35400; padding: 6px;">这是一段宽度限制为 40ch 的文本示例。</div>
+            </div>
+        </div>
+
+        <div class="unit-card">
+            <h2>ex<span class="category">相对单位</span></h2>
+            <p>相对于当前元素字体中 "x" 字符的高度。使用较少，偶用于垂直对齐微调。</p>
+            <div class="demo-box">
+                <label>示例：height: 4ex</label>
+                <div class="demo" style="height: 4ex; border: 2px solid #16a085; display: inline-block; vertical-align: middle;">高度 4ex</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

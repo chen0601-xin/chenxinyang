@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-4 ECharts 可视化图表</title>
+    <style>
+        body { margin: 0; background: #f4f6fa; font-family: "Microsoft YaHei", sans-serif; color: #1a2340; }
+        header { background: #1e3a5f; color: #fff; padding: 24px 40px; }
+        header h1 { margin: 0 0 6px; font-size: 26px; }
+        header p { margin: 0; opacity: .85; font-size: 14px; }
+        .wrap { max-width: 1360px; margin: 0 auto; padding: 30px 20px; }
+        .card {
+            background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        }
+        .card h2 { margin: 0 0 4px; font-size: 20px; color: #1e3a5f; }
+        .card .desc { color: #6b7280; font-size: 13px; margin-bottom: 18px; }
+        .chart-box { height: 520px; }
+        .tag {
+            display: inline-block; background: #e8f0fb; color: #235789;
+            padding: 3px 10px; border-radius: 10px; font-size: 12px; margin-right: 6px;
+        }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <header>
+        <h1>陈新阳 · ECharts 可视化图表</h1>
+        <p>使用本地 CDN 资源 (cdn/echarts.min.js) · 雷达图 + 桑基图</p>
+    </header>
+    <div class="wrap">
+        <div class="card">
+            <h2>📊 图一：AQI 空气质量雷达图</h2>
+            <div class="desc"><span class="tag">Radar</span> 对比北京、上海、广州三座城市的六项空气污染物指标</div>
+            <div class="chart-box" id="chart1"></div>
+        </div>
+
+        <div class="card">
+            <h2>🌐 图二：桑基图 Sankey</h2>
+            <div class="desc"><span class="tag">Sankey</span> 节点 A-G 之间的流向关系可视化</div>
+            <div class="chart-box" id="chart2"></div>
+        </div>
+    </div>
+
+    <script src="cdn/echarts.min.js"></script>
+    <script>
+        var darkTheme = {
+            backgroundColor: '#1a2038',
+            textStyle: { color: '#e2e8f0' }
+        };
+
+        var chart1 = echarts.init(document.getElementById('chart1'));
+        chart1.setOption({
+            backgroundColor: darkTheme.backgroundColor,
+            title: {
+                text: 'AQI - Radar',
+                left: 'center', top: 20,
+                textStyle: { color: '#fff', fontSize: 22, fontWeight: 'bold' }
+            },
+            legend: {
+                bottom: 20, icon: 'roundRect', itemWidth: 18, itemHeight: 12,
+                textStyle: { color: '#cbd5e1', fontSize: 13 },
+                data: ['Beijing', 'Shanghai', 'Guangzhou']
+            },
+            radar: {
+                indicator: [
+                    { name: 'AQI', max: 150 },
+                    { name: 'SO2', max: 50 },
+                    { name: 'NO2', max: 100 },
+                    { name: 'CO', max: 10 },
+                    { name: 'PM10', max: 150 },
+                    { name: 'PM2.5', max: 120 }
+                ],
+                shape: 'polygon',
+                splitNumber: 4,
+                axisName: { color: '#f5c666', fontSize: 13, fontWeight: 'bold' },
+                splitArea: {
+                    areaStyle: { color: ['#252b47', '#1f2540', '#252b47', '#1f2540'] }
+                },
+                splitLine: { lineStyle: { color: '#3a4063' } },
+                axisLine: { lineStyle: { color: '#3a4063' } }
+            },
+            series: [{
+                type: 'radar',
+                symbolSize: 6,
+                lineStyle: { width: 2 },
+                areaStyle: { opacity: 0.35 },
+                data: [
+                    {
+                        value: [130, 38, 95, 8, 145, 108],
+                        name: 'Beijing',
+                        itemStyle: { color: '#e76f51' },
+                        lineStyle: { color: '#e76f51' },
+                        areaStyle: { color: '#e76f51' }
+                    },
+                    {
+                        value: [85, 22, 65, 5, 78, 62],
+                        name: 'Shanghai',
+                        itemStyle: { color: '#6b7280' },
+                        lineStyle: { color: '#94a3b8' },
+                        areaStyle: { color: '#6b7280' }
+                    },
+                    {
+                        value: [65, 15, 48, 3, 55, 42],
+                        name: 'Guangzhou',
+                        itemStyle: { color: '#2ecc71' },
+                        lineStyle: { color: '#2ecc71' },
+                        areaStyle: { color: '#2ecc71' }
+                    }
+                ]
+            }]
+        });
+
+        var chart2 = echarts.init(document.getElementById('chart2'));
+        var colors = ['#4a7bff', '#a3d952', '#6b7280', '#ff9a52', '#22d3ee', '#f5c518', '#ff6b8a'];
+        chart2.setOption({
+            backgroundColor: '#0a0a12',
+            color: colors,
+            title: {
+                text: 'Sankey Diagram',
+                left: 'center', top: 20,
+                textStyle: { color: '#fff', fontSize: 22, fontWeight: 'bold' }
+            },
+            series: [{
+                type: 'sankey',
+                layout: 'none',
+                emphasis: { focus: 'adjacency' },
+                nodeAlign: 'left',
+                nodeGap: 6,
+                nodeWidth: 22,
+                label: {
+                    color: '#fff', fontSize: 15, fontWeight: 'bold',
+                    textBorderColor: '#000', textBorderWidth: 2
+                },
+                lineStyle: {
+                    color: 'gradient', curveness: 0.5, opacity: 0.55
+                },
+                data: [
+                    { name: 'A', itemStyle: { color: colors[0], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'B', itemStyle: { color: colors[1], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'C', itemStyle: { color: colors[2], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'D', itemStyle: { color: colors[3], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'E', itemStyle: { color: colors[4], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'F', itemStyle: { color: colors[5], borderColor: '#fff', borderWidth: 2 } },
+                    { name: 'G', itemStyle: { color: colors[6], borderColor: '#fff', borderWidth: 2 } }
+                ],
+                links: [
+                    { source: 'A', target: 'B', value: 28 },
+                    { source: 'A', target: 'C', value: 12 },
+                    { source: 'A', target: 'G', value: 8 },
+                    { source: 'B', target: 'C', value: 18 },
+                    { source: 'B', target: 'D', value: 14 },
+                    { source: 'C', target: 'D', value: 22 },
+                    { source: 'C', target: 'E', value: 10 },
+                    { source: 'D', target: 'E', value: 16 },
+                    { source: 'D', target: 'F', value: 8 },
+                    { source: 'E', target: 'F', value: 12 },
+                    { source: 'B', target: 'E', value: 6 },
+                    { source: 'A', target: 'E', value: 4 }
+                ]
+            }]
+        });
+
+        window.addEventListener('resize', function () {
+            chart1.resize();
+            chart2.resize();
+        });
+    </script>
+</body>
+</html>

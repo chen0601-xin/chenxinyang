@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陈新阳 - CSS3 3D动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .chen_header {
+            text-align: center;
+            padding: 40px 0 20px;
+        }
+
+        .chen_header h1 {
+            font-size: 42px;
+            background: linear-gradient(90deg, #f7971e, #ffd200, #ff6b6b, #f7971e);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: chen_gradient_move 4s ease infinite;
+        }
+
+        .chen_header p {
+            margin-top: 10px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes chen_gradient_move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .chen_section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+            flex-wrap: wrap;
+            padding: 50px 20px;
+        }
+
+        .chen_demo_label {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chen_cube_container {
+            perspective: 800px;
+            width: 200px;
+            height: 200px;
+        }
+
+        .chen_cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: chen_cube_spin 8s linear infinite;
+        }
+
+        @keyframes chen_cube_spin {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .chen_cube_face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            backface-visibility: visible;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chen_cube_face:nth-child(1) { transform: rotateY(0deg) translateZ(100px); background: rgba(255, 107, 107, 0.2); }
+        .chen_cube_face:nth-child(2) { transform: rotateY(90deg) translateZ(100px); background: rgba(78, 205, 196, 0.2); }
+        .chen_cube_face:nth-child(3) { transform: rotateY(180deg) translateZ(100px); background: rgba(255, 210, 0, 0.2); }
+        .chen_cube_face:nth-child(4) { transform: rotateY(270deg) translateZ(100px); background: rgba(155, 89, 182, 0.2); }
+        .chen_cube_face:nth-child(5) { transform: rotateX(90deg) translateZ(100px); background: rgba(52, 152, 219, 0.2); }
+        .chen_cube_face:nth-child(6) { transform: rotateX(270deg) translateZ(100px); background: rgba(46, 204, 113, 0.2); }
+
+        .chen_card_container {
+            perspective: 800px;
+            width: 260px;
+            height: 340px;
+        }
+
+        .chen_card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+
+        .chen_card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .chen_card_face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .chen_card_front {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .chen_card_front span {
+            font-size: 60px;
+            margin-bottom: 16px;
+        }
+
+        .chen_card_back {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            transform: rotateY(180deg);
+        }
+
+        .chen_card_back span {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .chen_card_back p {
+            font-size: 14px;
+            font-weight: normal;
+            opacity: 0.8;
+        }
+
+        .chen_carousel_container {
+            perspective: 1000px;
+            width: 300px;
+            height: 200px;
+        }
+
+        .chen_carousel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: chen_carousel_rotate 12s linear infinite;
+        }
+
+        @keyframes chen_carousel_rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .chen_carousel_item {
+            position: absolute;
+            width: 200px;
+            height: 140px;
+            left: 50px;
+            top: 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            backface-visibility: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .chen_carousel_item:nth-child(1) { transform: rotateY(0deg) translateZ(200px); background: linear-gradient(135deg, #e44d26, #f16529); }
+        .chen_carousel_item:nth-child(2) { transform: rotateY(72deg) translateZ(200px); background: linear-gradient(135deg, #264de4, #2965f1); }
+        .chen_carousel_item:nth-child(3) { transform: rotateY(144deg) translateZ(200px); background: linear-gradient(135deg, #f7df1e, #d4b90a); color: #333; }
+        .chen_carousel_item:nth-child(4) { transform: rotateY(216deg) translateZ(200px); background: linear-gradient(135deg, #61dafb, #21a1c4); color: #333; }
+        .chen_carousel_item:nth-child(5) { transform: rotateY(288deg) translateZ(200px); background: linear-gradient(135deg, #38bdf6, #0e7490); }
+
+        .chen_pyramid_container {
+            perspective: 800px;
+            width: 220px;
+            height: 220px;
+        }
+
+        .chen_pyramid {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: chen_pyramid_spin 10s linear infinite;
+        }
+
+        @keyframes chen_pyramid_spin {
+            0% { transform: rotateX(-20deg) rotateY(0deg); }
+            100% { transform: rotateX(-20deg) rotateY(360deg); }
+        }
+
+        .chen_pyramid_face {
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 110px;
+            top: 110px;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 173px solid rgba(78, 205, 196, 0.4);
+            transform-origin: bottom center;
+        }
+
+        .chen_pyramid_face:nth-child(1) { transform: rotateY(0deg) rotateX(30deg) translateZ(0px) translateY(-58px); }
+        .chen_pyramid_face:nth-child(2) { transform: rotateY(90deg) rotateX(30deg) translateZ(0px) translateY(-58px); border-bottom-color: rgba(255, 107, 107, 0.4); }
+        .chen_pyramid_face:nth-child(3) { transform: rotateY(180deg) rotateX(30deg) translateZ(0px) translateY(-58px); border-bottom-color: rgba(255, 210, 0, 0.4); }
+        .chen_pyramid_face:nth-child(4) { transform: rotateY(270deg) rotateX(30deg) translateZ(0px) translateY(-58px); border-bottom-color: rgba(155, 89, 182, 0.4); }
+
+        .chen_pendulum_container {
+            perspective: 600px;
+            width: 200px;
+            height: 260px;
+            position: relative;
+        }
+
+        .chen_pendulum {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform-origin: top center;
+            animation: chen_pendulum_swing 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes chen_pendulum_swing {
+            0% { transform: rotateZ(30deg); }
+            100% { transform: rotateZ(-30deg); }
+        }
+
+        .chen_pendulum_rod {
+            position: absolute;
+            top: 0;
+            left: 98px;
+            width: 4px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.6);
+            transform: translateZ(0px);
+        }
+
+        .chen_pendulum_ball {
+            position: absolute;
+            top: 175px;
+            left: 60px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffd200, #f7971e, #e44d26);
+            box-shadow: 0 0 30px rgba(255, 165, 0, 0.6);
+        }
+
+        .chen_pendulum_shadow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4), transparent);
+            border-radius: 50%;
+        }
+
+        .chen_footer {
+            text-align: center;
+            padding: 30px 0 50px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header class="chen_header">
+        <h1>陈新阳的 CSS3 3D 动画</h1>
+        <p>perspective · transform-style · rotateX/Y/Z · preserve-3d</p>
+    </header>
+
+    <section class="chen_section">
+        <div>
+            <div class="chen_cube_container">
+                <div class="chen_cube">
+                    <div class="chen_cube_face">前</div>
+                    <div class="chen_cube_face">右</div>
+                    <div class="chen_cube_face">后</div>
+                    <div class="chen_cube_face">左</div>
+                    <div class="chen_cube_face">上</div>
+                    <div class="chen_cube_face">下</div>
+                </div>
+            </div>
+            <p class="chen_demo_label">3D 立方体旋转</p>
+        </div>
+
+        <div>
+            <div class="chen_card_container">
+                <div class="chen_card">
+                    <div class="chen_card_face chen_card_front">
+                        <span>&#128161;</span>
+                        <span>悬停翻转</span>
+                    </div>
+                    <div class="chen_card_face chen_card_back">
+                        <span>&#11088;</span>
+                        <span>陈新阳</span>
+                        <p>CSS3 3D 翻转卡片</p>
+                    </div>
+                </div>
+            </div>
+            <p class="chen_demo-label">3D 翻转卡片</p>
+        </div>
+
+        <div>
+            <div class="chen_carousel_container">
+                <div class="chen_carousel">
+                    <div class="chen_carousel_item">HTML5</div>
+                    <div class="chen_carousel_item">CSS3</div>
+                    <div class="chen_carousel_item">JS</div>
+                    <div class="chen_carousel_item">React</div>
+                    <div class="chen_carousel_item">Vue</div>
+                </div>
+            </div>
+            <p class="chen_demo_label">3D 轮播</p>
+        </div>
+
+        <div>
+            <div class="chen_pyramid_container">
+                <div class="chen_pyramid">
+                    <div class="chen_pyramid_face"></div>
+                    <div class="chen_pyramid_face"></div>
+                    <div class="chen_pyramid_face"></div>
+                    <div class="chen_pyramid_face"></div>
+                </div>
+            </div>
+            <p class="chen_demo_label">3D 金字塔旋转</p>
+        </div>
+
+        <div>
+            <div class="chen_pendulum_container">
+                <div class="chen_pendulum">
+                    <div class="chen_pendulum_rod"></div>
+                    <div class="chen_pendulum_ball"></div>
+                    <div class="chen_pendulum_shadow"></div>
+                </div>
+            </div>
+            <p class="chen_demo_label">3D 钟摆</p>
+        </div>
+    </section>
+
+    <footer class="chen_footer">陈新阳 · 《高级网页设计》课堂实践</footer>
+</body>
+</html>

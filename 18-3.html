@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-3 SVG 知识库智能客服系统架构图</title>
+    <style>
+        :root {
+            --ink: #1a2340;
+            --accent: #3b5ba0;
+            --accent2: #7b4b94;
+            --accent3: #2e7d6f;
+            --muted: #6b7280;
+            --bg: #fafbfd;
+            --line: #e2e8f0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; background: var(--bg);
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif; color: var(--ink);
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 40px 32px; }
+        header { border-bottom: 2px solid var(--ink); padding-bottom: 18px; margin-bottom: 32px; }
+        header h1 { margin: 0 0 8px; font-size: 32px; letter-spacing: 1px; }
+        header .sub { color: var(--muted); font-size: 14px; }
+        .paper {
+            background: #fff; border: 1px solid var(--line); border-radius: 6px;
+            padding: 36px; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+        }
+        .meta {
+            margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 16px; font-size: 13px;
+        }
+        .meta .card {
+            border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px;
+        }
+        .meta .card h4 { margin: 0 0 8px; font-size: 13px; color: var(--accent); }
+        .meta .card p { margin: 0; color: #374151; line-height: 1.6; }
+        .legend-row {
+            display: flex; gap: 20px; flex-wrap: wrap; margin-top: 22px; font-size: 12px;
+        }
+        .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
+        .legend-row .sw { width: 28px; height: 3px; }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <div class="container">
+        <header>
+            <h1>知识库智能客服系统架构</h1>
+            <div class="sub">Knowledge-Base Intelligent Customer Service System · 科研方向系统架构图 · by 陈新阳</div>
+        </header>
+
+        <div class="paper">
+            <svg viewBox="0 0 1200 760" width="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrow1" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                        <path d="M0,0 L8,3 L0,6 Z" fill="#3b5ba0" />
+                    </marker>
+                    <marker id="arrow2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                        <path d="M0,0 L8,3 L0,6 Z" fill="#7b4b94" />
+                    </marker>
+                    <marker id="arrow3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                        <path d="M0,0 L8,3 L0,6 Z" fill="#2e7d6f" />
+                    </marker>
+                    <linearGradient id="gradUser" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#dbe6f5"/>
+                        <stop offset="1" stop-color="#b5c9e8"/>
+                    </linearGradient>
+                    <linearGradient id="gradNLP" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#e8ddf0"/>
+                        <stop offset="1" stop-color="#c3aed6"/>
+                    </linearGradient>
+                    <linearGradient id="gradKB" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#d9efe9"/>
+                        <stop offset="1" stop-color="#9dd1c4"/>
+                    </linearGradient>
+                    <linearGradient id="gradCore" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#f5f0d6"/>
+                        <stop offset="1" stop-color="#e6d892"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- ========== 标题 ========== -->
+                <text x="600" y="36" text-anchor="middle" font-family="Microsoft YaHei" font-size="18" font-weight="bold" fill="#1a2340">图 1  基于 RAG 的知识库智能客服系统总体架构</text>
+                <text x="600" y="56" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" fill="#6b7280">Fig.1  Overall Architecture of RAG-based Knowledge-Base Intelligent Customer Service</text>
+
+                <!-- ========== 用户层 ========== -->
+                <rect x="40" y="80" width="1120" height="76" rx="4" fill="url(#gradUser)" stroke="#3b5ba0" stroke-width="1.5"/>
+                <text x="56" y="100" font-family="Microsoft YaHei" font-size="11" fill="#3b5ba0" font-weight="bold">① 用户接入层 User Layer</text>
+                <rect x="80" y="110" width="120" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="140" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">Web Chat</text>
+                <rect x="220" y="110" width="120" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="280" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">App SDK</text>
+                <rect x="360" y="110" width="140" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="430" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">微信 / 企业微信</text>
+                <rect x="520" y="110" width="120" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="580" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">API 开放</text>
+                <rect x="660" y="110" width="140" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="730" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">语音 IVR</text>
+                <rect x="820" y="110" width="140" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="890" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">小程序</text>
+                <rect x="980" y="110" width="140" height="32" rx="4" fill="#fff" stroke="#3b5ba0"/>
+                <text x="1050" y="130" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" fill="#1a2340">邮件 Agent</text>
+
+                <!-- ========== 接入网关层 ========== -->
+                <rect x="40" y="180" width="1120" height="70" rx="4" fill="#f0f4fa" stroke="#3b5ba0" stroke-width="1.5"/>
+                <text x="56" y="200" font-family="Microsoft YaHei" font-size="11" fill="#3b5ba0" font-weight="bold">② 接入网关层 Gateway Layer</text>
+                <rect x="100" y="210" width="180" height="28" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="190" y="228" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">Nginx / 负载均衡</text>
+                <rect x="300" y="210" width="180" height="28" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="390" y="228" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">WebSocket 长连接</text>
+                <rect x="500" y="210" width="180" height="28" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="590" y="228" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">WAF 防火墙</text>
+                <rect x="700" y="210" width="180" height="28" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="790" y="228" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">JWT 鉴权 / 限流</text>
+                <rect x="900" y="210" width="220" height="28" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="1010" y="228" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">消息队列 (Kafka)</text>
+
+                <!-- 箭头 用户 -> 网关 -->
+                <line x1="600" y1="156" x2="600" y2="180" stroke="#3b5ba0" stroke-width="1.6" marker-end="url(#arrow1)"/>
+
+                <!-- ========== NLP / 大模型层 ========== -->
+                <rect x="40" y="270" width="540" height="120" rx="4" fill="url(#gradNLP)" stroke="#7b4b94" stroke-width="1.5"/>
+                <text x="56" y="290" font-family="Microsoft YaHei" font-size="11" fill="#7b4b94" font-weight="bold">③ NLP 与大模型层 NLP & LLM Layer</text>
+
+                <rect x="70" y="302" width="140" height="34" rx="3" fill="#fff" stroke="#7b4b94"/>
+                <text x="140" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">意图识别 Intent</text>
+                <rect x="220" y="302" width="140" height="34" rx="3" fill="#fff" stroke="#7b4b94"/>
+                <text x="290" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">实体抽取 NER</text>
+                <rect x="370" y="302" width="150" height="34" rx="3" fill="#fff" stroke="#7b4b94"/>
+                <text x="445" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">情感分析 Sentiment</text>
+
+                <rect x="70" y="346" width="160" height="34" rx="3" fill="#fff" stroke="#7b4b94" stroke-width="1.4"/>
+                <text x="150" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Embedding 向量化</text>
+                <rect x="250" y="346" width="160" height="34" rx="3" fill="#fff" stroke="#7b4b94" stroke-width="1.4"/>
+                <text x="330" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Rerank 重排序</text>
+                <rect x="430" y="346" width="120" height="34" rx="3" fill="#efe3f5" stroke="#7b4b94" stroke-width="1.5"/>
+                <text x="490" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">LLM 生成器</text>
+
+                <!-- ========== 知识库层 ========== -->
+                <rect x="620" y="270" width="540" height="120" rx="4" fill="url(#gradKB)" stroke="#2e7d6f" stroke-width="1.5"/>
+                <text x="636" y="290" font-family="Microsoft YaHei" font-size="11" fill="#2e7d6f" font-weight="bold">④ 知识库与检索层 Knowledge Base</text>
+
+                <rect x="650" y="302" width="140" height="34" rx="3" fill="#fff" stroke="#2e7d6f"/>
+                <text x="720" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">文档仓库 (PDF/MD)</text>
+                <rect x="800" y="302" width="140" height="34" rx="3" fill="#fff" stroke="#2e7d6f"/>
+                <text x="870" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">FAQ 数据库</text>
+                <rect x="950" y="302" width="140" height="34" rx="3" fill="#fff" stroke="#2e7d6f"/>
+                <text x="1020" y="323" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">向量存储 Milvus</text>
+
+                <rect x="650" y="346" width="160" height="34" rx="3" fill="#fff" stroke="#2e7d6f"/>
+                <text x="730" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">图数据库 Neo4j</text>
+                <rect x="830" y="346" width="150" height="34" rx="3" fill="#fff" stroke="#2e7d6f"/>
+                <text x="905" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">ElasticSearch</text>
+                <rect x="1000" y="346" width="140" height="34" rx="3" fill="#e2f0ec" stroke="#2e7d6f" stroke-width="1.5"/>
+                <text x="1070" y="367" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Hybrid 混合检索</text>
+
+                <!-- 箭头 网关 -> NLP / KB -->
+                <path d="M400,250 L310,270" stroke="#3b5ba0" stroke-width="1.4" fill="none" marker-end="url(#arrow1)"/>
+                <path d="M800,250 L890,270" stroke="#3b5ba0" stroke-width="1.4" fill="none" marker-end="url(#arrow1)"/>
+
+                <!-- 双向箭头 NLP <-> KB -->
+                <path d="M580,330 L620,330" stroke="#7b4b94" stroke-width="1.4" fill="none" marker-end="url(#arrow2)"/>
+                <path d="M620,350 L580,350" stroke="#2e7d6f" stroke-width="1.4" fill="none" marker-end="url(#arrow3)"/>
+
+                <!-- ========== 核心 RAG 引擎 ========== -->
+                <rect x="40" y="410" width="1120" height="100" rx="4" fill="url(#gradCore)" stroke="#c9a227" stroke-width="1.8"/>
+                <text x="56" y="432" font-family="Microsoft YaHei" font-size="11" fill="#8b6914" font-weight="bold">⑤ RAG 核心引擎 RAG Core Engine (Retrieval-Augmented Generation)</text>
+
+                <rect x="80" y="444" width="180" height="44" rx="4" fill="#fffdf0" stroke="#c9a227"/>
+                <text x="170" y="464" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" font-weight="bold">Query 改写</text>
+                <text x="170" y="480" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#8b6914">Multi-Query / HyDE</text>
+
+                <rect x="280" y="444" width="180" height="44" rx="4" fill="#fffdf0" stroke="#c9a227"/>
+                <text x="370" y="464" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" font-weight="bold">检索融合</text>
+                <text x="370" y="480" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#8b6914">Dense + Sparse + Rerank</text>
+
+                <rect x="480" y="444" width="180" height="44" rx="4" fill="#fffdf0" stroke="#c9a227"/>
+                <text x="570" y="464" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" font-weight="bold">Prompt 构建</text>
+                <text x="570" y="480" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#8b6914">Template + Context Window</text>
+
+                <rect x="680" y="444" width="180" height="44" rx="4" fill="#fffdf0" stroke="#c9a227"/>
+                <text x="770" y="464" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" font-weight="bold">LLM 推理</text>
+                <text x="770" y="480" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#8b6914">GPT-4 / 文心 / Llama3</text>
+
+                <rect x="880" y="444" width="180" height="44" rx="4" fill="#fffdf0" stroke="#c9a227"/>
+                <text x="970" y="464" text-anchor="middle" font-family="Microsoft YaHei" font-size="12" font-weight="bold">答案校验</text>
+                <text x="970" y="480" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#8b6914">Groundedness Score / Fuzzy</text>
+
+                <!-- 箭头 NLP/KB -> RAG -->
+                <path d="M310,390 L310,410" stroke="#7b4b94" stroke-width="1.4" fill="none" marker-end="url(#arrow2)"/>
+                <path d="M890,390 L890,410" stroke="#2e7d6f" stroke-width="1.4" fill="none" marker-end="url(#arrow3)"/>
+
+                <!-- ========== 业务服务层 ========== -->
+                <rect x="40" y="530" width="1120" height="90" rx="4" fill="#f0f4fa" stroke="#3b5ba0" stroke-width="1.5"/>
+                <text x="56" y="550" font-family="Microsoft YaHei" font-size="11" fill="#3b5ba0" font-weight="bold">⑥ 业务服务层 Business Service Layer</text>
+                <rect x="80" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="155" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">多轮对话管理</text>
+                <rect x="250" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="325" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">会话上下文存储</text>
+                <rect x="420" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="495" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">转人工坐席</text>
+                <rect x="590" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="665" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">工单系统</text>
+                <rect x="760" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="835" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">知识库管理后台</text>
+                <rect x="930" y="562" width="150" height="38" rx="3" fill="#fff" stroke="#3b5ba0"/>
+                <text x="1005" y="586" text-anchor="middle" font-family="Microsoft YaHei" font-size="11">A/B 实验平台</text>
+
+                <line x1="600" y1="510" x2="600" y2="530" stroke="#c9a227" stroke-width="1.6" marker-end="url(#arrow3)"/>
+
+                <!-- ========== 基础设施 / 数据层 ========== -->
+                <rect x="40" y="640" width="1120" height="100" rx="4" fill="#f8f9fb" stroke="#9ca3af" stroke-width="1.5"/>
+                <text x="56" y="660" font-family="Microsoft YaHei" font-size="11" fill="#6b7280" font-weight="bold">⑦ 基础设施与可观测性 Infrastructure & Observability</text>
+
+                <rect x="80" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="155" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Redis Cluster</text>
+                <text x="155" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">缓存 / 会话</text>
+
+                <rect x="250" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="325" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">MySQL</text>
+                <text x="325" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">业务数据持久化</text>
+
+                <rect x="420" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="495" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">ClickHouse</text>
+                <text x="495" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">对话日志 / 分析</text>
+
+                <rect x="590" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="665" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Prometheus</text>
+                <text x="665" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">指标监控</text>
+
+                <rect x="760" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="835" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">ELK</text>
+                <text x="835" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">日志聚合</text>
+
+                <rect x="930" y="672" width="150" height="48" rx="3" fill="#fff" stroke="#9ca3af"/>
+                <text x="1005" y="692" text-anchor="middle" font-family="Microsoft YaHei" font-size="11" font-weight="bold">Docker / K8s</text>
+                <text x="1005" y="708" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#6b7280">容器编排</text>
+
+                <line x1="600" y1="620" x2="600" y2="640" stroke="#9ca3af" stroke-width="1.4" marker-end="url(#arrow1)"/>
+
+                <!-- ========== 侧边标注 ========== -->
+                <g opacity="0.75">
+                    <rect x="1090" y="295" width="60" height="16" rx="2" fill="#e8ddf0"/>
+                    <text x="1120" y="307" text-anchor="middle" font-family="Microsoft YaHei" font-size="9" fill="#7b4b94">NLP 处理流</text>
+                    <line x1="1120" y1="311" x2="1120" y2="390" stroke="#7b4b94" stroke-dasharray="3,3" stroke-width="1"/>
+                </g>
+
+                <!-- ========== 右下角水印 ========== -->
+                <text x="1170" y="748" text-anchor="end" font-family="Microsoft YaHei" font-size="10" fill="#9ca3af">陈新阳 · 科研方向系统架构 · SVG</text>
+            </svg>
+
+            <div class="legend-row">
+                <span><i class="sw" style="background:#3b5ba0"></i> 用户 / 网关层数据</span>
+                <span><i class="sw" style="background:#7b4b94"></i> NLP 处理路径</span>
+                <span><i class="sw" style="background:#2e7d6f"></i> 知识检索路径</span>
+                <span><i class="sw" style="background:#c9a227"></i> RAG 核心引擎</span>
+                <span><i class="sw" style="background:#9ca3af"></i> 基础设施</span>
+            </div>
+        </div>
+
+        <div class="meta">
+            <div class="card">
+                <h4>🔍 关键技术路线</h4>
+                <p>RAG 检索增强生成<br>向量数据库 + 重排序<br>Query 改写 (HyDE)</p>
+            </div>
+            <div class="card">
+                <h4>📊 评估指标</h4>
+                <p>Faithfulness (忠实度)<br>Answer Relevance<br>Context Precision / Recall</p>
+            </div>
+            <div class="card">
+                <h4>🧪 实验对比</h4>
+                <p>纯 LLM vs RAG<br>Dense vs Sparse vs Hybrid<br>不同 Embedding 模型</p>
+            </div>
+            <div class="card">
+                <h4>📚 参考模型</h4>
+                <p>LlamaIndex / LangChain<br>Dify 开源框架<br>Milvus 向量引擎</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

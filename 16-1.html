@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数组方法 · 可视化演示</title>
+    <style>
+        :root {
+            --ink: #1b2540;
+            --muted: #65708a;
+            --paper: #ffffff;
+            --bg: #eef2fb;
+            --blue: #3a6df0;
+            --coral: #ff6b6b;
+            --green: #2bb673;
+            --gold: #f4a625;
+            --purple: #8a5cf6;
+            --line: #e3e8f4;
+            --shadow: 0 14px 40px rgba(40, 56, 120, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background:
+                radial-gradient(circle at 10% 0%, rgba(58, 109, 240, 0.10), transparent 26%),
+                radial-gradient(circle at 95% 12%, rgba(255, 107, 107, 0.10), transparent 26%),
+                var(--bg);
+            line-height: 1.6;
+        }
+
+        .page { width: min(1140px, calc(100% - 40px)); margin: 0 auto; padding: 40px 0 70px; }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 52px clamp(26px, 6vw, 72px);
+            border-radius: 26px;
+            background: linear-gradient(135deg, #2b3e8f 0%, #3a6df0 60%, #5b8bff 100%);
+            color: #fff;
+            box-shadow: var(--shadow);
+        }
+        .hero::after {
+            content: "[ ]";
+            position: absolute;
+            right: -10px;
+            bottom: -40px;
+            font-size: 240px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.07);
+            font-family: Georgia, serif;
+        }
+        .hero .eyebrow {
+            margin: 0 0 14px;
+            color: #bcd0ff;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.16em;
+        }
+        .hero h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(34px, 5.5vw, 60px);
+            line-height: 1.1;
+        }
+        .hero p { max-width: 640px; margin: 18px 0 0; color: #dbe5ff; font-size: 16px; }
+
+        /* ---------- Section ---------- */
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 52px 0 22px;
+            flex-wrap: wrap;
+        }
+        .section-heading h2 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 27px;
+        }
+        .section-heading span.tag {
+            font-size: 13px;
+            color: var(--muted);
+            background: #fff;
+            border: 1px solid var(--line);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ---------- Playground ---------- */
+        .playground {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 28px clamp(20px, 4vw, 40px) 34px;
+            box-shadow: var(--shadow);
+        }
+        .pg-label { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+        .array-track {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            min-height: 84px;
+            padding: 14px;
+            border-radius: 14px;
+            background: #f6f8ff;
+            border: 1px dashed var(--line);
+        }
+        .tile {
+            --c: var(--blue);
+            position: relative;
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            background: var(--c);
+            border-radius: 14px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+            transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s, background .3s;
+            animation: pop .35s ease;
+        }
+        @keyframes pop { from { transform: scale(0) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+        .tile.leaving { transform: scale(0) translateY(-40px); opacity: 0; }
+        .tile.faded { opacity: 0.18; filter: grayscale(0.7); transform: scale(0.9); }
+        .tile.hit { box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--gold); }
+        .tile small {
+            position: absolute;
+            bottom: -20px;
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: normal;
+        }
+
+        .pg-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+        button.act {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background: var(--blue);
+            padding: 10px 16px;
+            border-radius: 10px;
+            transition: transform .15s, filter .15s;
+        }
+        button.act:hover { transform: translateY(-2px); filter: brightness(1.07); }
+        button.act.alt { background: var(--purple); }
+        button.act.warn { background: var(--coral); }
+        button.act.ghost { background: #eef1fb; color: var(--blue); border: 1px solid var(--line); }
+        .pg-readout {
+            margin-top: 18px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            color: var(--ink);
+            background: #0f1530;
+            color: #8ff0c8;
+            padding: 14px 16px;
+            border-radius: 12px;
+            min-height: 22px;
+        }
+        .pg-readout b { color: #ffd36b; }
+
+        /* ---------- Method cards ---------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 22px 22px 24px;
+            box-shadow: 0 6px 18px rgba(40, 56, 120, 0.06);
+            transition: transform .18s, box-shadow .18s;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .card .cat {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            background: var(--blue);
+            padding: 3px 11px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .cat.c-add { background: var(--green); }
+        .cat.c-find { background: var(--gold); }
+        .cat.c-loop { background: var(--purple); }
+        .cat.c-trans { background: var(--coral); }
+        .card h3 { margin: 0 0 4px; font-family: Consolas, "Courier New", monospace; font-size: 20px; color: var(--blue); }
+        .card .desc { margin: 0 0 14px; font-size: 13.5px; color: var(--muted); }
+        .card .mini {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            min-height: 50px;
+            padding: 12px;
+            background: #f6f8ff;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .mini .tile { width: 44px; height: 44px; font-size: 18px; border-radius: 11px; }
+        .mini .arrow { color: var(--muted); font-size: 18px; font-weight: bold; }
+        .mini .result {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            color: var(--green);
+            font-weight: bold;
+            word-break: break-all;
+        }
+        .card code {
+            display: block;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12.5px;
+            color: #dcd6ff;
+            background: #1c2342;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+        .card .run {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 13px;
+            color: #fff;
+            background: var(--blue);
+            padding: 8px 16px;
+            border-radius: 9px;
+            transition: filter .15s, transform .15s;
+        }
+        .card .run:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+        footer { margin-top: 56px; text-align: center; color: var(--muted); font-size: 13px; }
+        footer b { color: var(--ink); }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <p class="eyebrow">CHAPTER 16 · JAVASCRIPT 数组</p>
+            <h1>数组方法<br>可视化演示</h1>
+            <p>数组就像一排带编号的盒子。下面用“会动的盒子”来演示 JavaScript 最常用的数组方法——点击按钮，亲眼看看每个方法是怎么改变数组的。</p>
+        </header>
+
+        <!-- 互动操场 -->
+        <div class="section-heading">
+            <h2>① 互动操场</h2>
+            <span class="tag">点按钮，看盒子变化</span>
+        </div>
+        <section class="playground">
+            <div class="pg-label">当前数组：</div>
+            <div class="array-track" id="track"></div>
+
+            <div class="pg-actions">
+                <button class="act" data-act="push">push(9)</button>
+                <button class="act warn" data-act="pop">pop()</button>
+                <button class="act" data-act="unshift">unshift(0)</button>
+                <button class="act warn" data-act="shift">shift()</button>
+                <button class="act alt" data-act="reverse">reverse()</button>
+                <button class="act alt" data-act="sort">sort()</button>
+                <button class="act alt" data-act="shuffle">shuffle</button>
+                <button class="act ghost" data-act="reset">reset</button>
+            </div>
+
+            <div class="pg-readout" id="readout">数组已就绪，试试上面的按钮吧 ✨</div>
+        </section>
+
+        <!-- 方法卡片 -->
+        <div class="section-heading">
+            <h2>② 主要方法卡片</h2>
+            <span class="tag">运行 → 看动画 + 代码</span>
+        </div>
+        <div class="grid" id="cards"></div>
+
+        <footer>
+            陈新阳 · 《高级网页设计》课堂实践 · <b>16-1.html</b><br>
+            数组是 JS 中最常用的数据结构，掌握这些方法能让数据处理事半功倍。
+        </footer>
+    </main>
+
+    <script>
+        /* ============ 通用工具 ============ */
+        const palette = ['#3a6df0', '#ff6b6b', '#2bb673', '#f4a625', '#8a5cf6', '#19b3c4', '#ef5da8'];
+        const rand = n => Math.floor(Math.random() * n);
+
+        function makeTile(value, label) {
+            const t = document.createElement('div');
+            t.className = 'tile';
+            t.style.setProperty('--c', palette[value % palette.length]);
+            t.textContent = value;
+            if (label) {
+                const s = document.createElement('small');
+                s.textContent = label;
+                t.appendChild(s);
+            }
+            return t;
+        }
+
+        /* ============ 互动操场 ============ */
+        const track = document.getElementById('track');
+        const readout = document.getElementById('readout');
+        let arr = [3, 1, 4, 1, 5, 2];
+
+        function render(list = arr, withAnim = true) {
+            track.innerHTML = '';
+            list.forEach((v, i) => {
+                const t = makeTile(v, '[' + i + ']');
+                if (!withAnim) t.style.animation = 'none';
+                track.appendChild(t);
+            });
+        }
+        function say(html) { readout.innerHTML = html; }
+
+        const actions = {
+            push() {
+                const v = rand(9) + 1;
+                arr.push(v);
+                render();
+                say(`<b>push(${v})</b> → 在末尾加入 ${v}，长度变成 <b>${arr.length}</b>`);
+            },
+            pop() {
+                if (!arr.length) return say('数组已空，无法 pop 😶');
+                const v = arr.pop();
+                render();
+                say(`<b>pop()</b> → 取出末尾的 ${v}，长度变成 <b>${arr.length}</b>`);
+            },
+            unshift() {
+                const v = rand(9) + 1;
+                arr.unshift(v);
+                render();
+                say(`<b>unshift(${v})</b> → 在开头插入 ${v}，其他元素整体右移，长度 <b>${arr.length}</b>`);
+            },
+            shift() {
+                if (!arr.length) return say('数组已空，无法 shift 😶');
+                const v = arr.shift();
+                render();
+                say(`<b>shift()</b> → 取出开头的 ${v}，其他元素整体左移，长度 <b>${arr.length}</b>`);
+            },
+            reverse() {
+                arr.reverse();
+                render();
+                say(`<b>reverse()</b> → 把盒子顺序完全倒过来 🔄`);
+            },
+            sort() {
+                arr.sort((a, b) => a - b);
+                render();
+                say(`<b>sort((a,b)=>a-b)</b> → 按数字从小到大重新排列`);
+            },
+            shuffle() {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = rand(i + 1);
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                render();
+                say(`<b>洗牌</b> → 随机打乱顺序（Fisher–Yates）`);
+            },
+            reset() {
+                arr = [3, 1, 4, 1, 5, 2];
+                render();
+                say('已重置为初始数组 [3, 1, 4, 1, 5, 2]');
+            }
+        };
+
+        document.querySelectorAll('button.act').forEach(btn => {
+            btn.addEventListener('click', () => actions[btn.dataset.act]());
+        });
+        render(arr, false);
+
+        /* ============ 方法卡片数据 ============ */
+        const methods = [
+            {
+                cat: 'c-add', catName: '增 / 删', name: 'push()',
+                desc: '在数组末尾追加一个或多个元素，返回新长度。',
+                code: 'let a = [1,2,3];\na.push(4);   // [1,2,3,4]',
+                demo(arr) { arr.push(99); return arr.slice(); }
+            },
+            {
+                cat: 'c-add', catName: '增 / 删', name: 'pop()',
+                desc: '删除并返回数组的最后一个元素。',
+                code: 'let a = [1,2,3];\nlet x = a.pop(); // x=3, a=[1,2]',
+                demo(arr) { const x = arr.pop(); return arr.slice(); }, note: v => '取出 ' + v
+            },
+            {
+                cat: 'c-add', catName: '增 / 删', name: 'unshift()',
+                desc: '在数组开头插入元素，其余元素右移。',
+                code: 'let a = [2,3];\na.unshift(1); // [1,2,3]',
+                demo(arr) { arr.unshift(0); return arr.slice(); }
+            },
+            {
+                cat: 'c-add', catName: '增 / 删', name: 'shift()',
+                desc: '删除并返回数组的第一个元素，其余左移。',
+                code: 'let a = [1,2,3];\nlet x = a.shift(); // x=1',
+                demo(arr) { const x = arr.shift(); return arr.slice(); }, note: v => '取出 ' + v
+            },
+            {
+                cat: 'c-add', catName: '增 / 删', name: 'splice()',
+                desc: '在指定位置删除 / 插入 / 替换元素，最灵活。',
+                code: 'let a=[1,2,3,4];\na.splice(1,2,9); // [1,9,4]',
+                demo(arr) { arr.splice(1, 2, 9); return arr.slice(); }
+            },
+            {
+                cat: 'c-find', catName: '查 / 找', name: 'indexOf()',
+                desc: '返回某元素首次出现的下标，找不到返回 -1。',
+                code: 'let a=[3,7,3];\na.indexOf(3); // 0',
+                demo(arr) { const i = arr.indexOf(arr[1]); return arr.slice(); }, find: true
+            },
+            {
+                cat: 'c-find', catName: '查 / 找', name: 'includes()',
+                desc: '判断数组是否包含某元素，返回 true / false。',
+                code: 'let a=[1,2,3];\na.includes(2); // true',
+                demo(arr) { return arr.slice(); }, test: a => a.includes(2)
+            },
+            {
+                cat: 'c-find', catName: '查 / 找', name: 'find()',
+                desc: '返回满足条件的第一个元素（找对象常用）。',
+                code: 'let a=[5,12,8];\na.find(x=>x>10); // 12',
+                demo(arr) { return arr.slice(); }, findCond: x => x > 2
+            },
+            {
+                cat: 'c-loop', catName: '遍 / 历', name: 'forEach()',
+                desc: '对每一个元素执行同一段代码（无返回值）。',
+                code: 'a.forEach(x =>\n  console.log(x));',
+                demo(arr) { return arr.slice(); }, each: true
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'map()',
+                desc: '对每个元素做变换，返回等长的新数组。',
+                code: 'let a=[1,2,3];\na.map(x=>x*2); // [2,4,6]',
+                demo(arr) { return arr.map(x => x * 2); }, transform: x => x * 2
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'filter()',
+                desc: '保留满足条件的元素，返回筛选后的新数组。',
+                code: 'let a=[1,2,3,4];\na.filter(x=>x%2===0);\n// [2,4]',
+                demo(arr) { return arr.filter(x => x % 2 === 0); }, keep: x => x % 2 === 0
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'reduce()',
+                desc: '把数组“折叠”成一个值，如求和、统计。',
+                code: 'let a=[1,2,3,4];\na.reduce((s,x)=>s+x,0);\n// 10',
+                demo(arr) { return arr.slice(); }, reduce: true
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'slice()',
+                desc: '截取数组的一段（含头不含尾），不改原数组。',
+                code: 'let a=[1,2,3,4];\na.slice(1,3); // [2,3]',
+                demo(arr) { return arr.slice(1, 3); }, slice: [1, 3]
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'concat()',
+                desc: '合并多个数组，返回新数组（不修改原数组）。',
+                code: 'let a=[1,2], b=[3,4];\na.concat(b); // [1,2,3,4]',
+                demo(arr) { return arr.concat([7, 8]); }, concatExtra: [7, 8]
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'sort()',
+                desc: '原地排序；默认按字符串，数字需传比较函数。',
+                code: 'let a=[3,1,2];\na.sort((x,y)=>x-y);\n// [1,2,3]',
+                demo(arr) { const c = arr.slice(); c.sort((x, y) => x - y); return c; }
+            },
+            {
+                cat: 'c-trans', catName: '转 / 换', name: 'join()',
+                desc: '把元素用分隔符连成字符串。',
+                code: 'let a=["a","b","c"];\na.join("-"); // "a-b-c"',
+                demo(arr) { return arr.slice(); }, join: true
+            }
+        ];
+
+        const cardsBox = document.getElementById('cards');
+        methods.forEach((m, idx) => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.innerHTML = `
+                <span class="cat ${m.cat}">${m.catName}</span>
+                <h3>${m.name}</h3>
+                <p class="desc">${m.desc}</p>
+                <div class="mini" id="mini-${idx}"></div>
+                <code>${m.code}</code>
+                <button class="run" data-i="${idx}">▶ 运行演示</button>
+            `;
+            cardsBox.appendChild(card);
+        });
+
+        function paintMini(idx) {
+            const m = methods[idx];
+            const base = [1, 2, 3, 4];
+            const mini = document.getElementById('mini-' + idx);
+            mini.innerHTML = '';
+            base.forEach(v => mini.appendChild(makeTile(v)));
+
+            const result = m.demo(base.slice());
+            const arrow = document.createElement('span');
+            arrow.className = 'arrow';
+            arrow.textContent = '→';
+            mini.appendChild(arrow);
+
+            // 结果展示（含特殊动画）
+            if (m.transform) {
+                // map：原盒子变身后复制
+                const t = makeTile(m.transform(base[0]));
+                t.style.background = 'var(--green)';
+                mini.appendChild(t);
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '[' + result.join(', ') + ']';
+                mini.appendChild(r);
+            } else if (m.keep) {
+                result.forEach(v => {
+                    const t = makeTile(v);
+                    t.style.background = 'var(--green)';
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '[' + result.join(', ') + ']';
+                mini.appendChild(r);
+            } else if (m.concatExtra) {
+                m.concatExtra.forEach(v => mini.appendChild(makeTile(v)));
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '[' + result.join(', ') + ']';
+                mini.appendChild(r);
+            } else if (m.slice) {
+                result.forEach(v => {
+                    const t = makeTile(v);
+                    t.style.background = 'var(--gold)';
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '[' + result.join(', ') + ']  (下标' + m.slice[0] + '~' + (m.slice[1]-1) + ')';
+                mini.appendChild(r);
+            } else if (m.join) {
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '"' + base.join('-') + '"';
+                mini.appendChild(r);
+            } else if (m.reduce) {
+                const sum = base.reduce((s, x) => s + x, 0);
+                const t = makeTile(sum);
+                t.style.background = 'var(--coral)';
+                mini.appendChild(t);
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = 'Σ = ' + sum;
+                mini.appendChild(r);
+            } else if (m.findCond) {
+                const hit = base.find(m.findCond);
+                base.forEach(v => {
+                    const t = makeTile(v);
+                    if (v === hit) t.classList.add('hit');
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '找到 ' + hit;
+                mini.appendChild(r);
+            } else if (m.test) {
+                base.forEach(v => {
+                    const t = makeTile(v);
+                    if (m.test(v)) t.classList.add('hit');
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = m.test(base) ? 'true' : 'false';
+                mini.appendChild(r);
+            } else if (m.find) {
+                const target = base[1];
+                const i = base.indexOf(target);
+                base.forEach((v, k) => {
+                    const t = makeTile(v);
+                    if (k === i) t.classList.add('hit');
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '下标 ' + i;
+                mini.appendChild(r);
+            } else {
+                // 默认：展示变化后的数组
+                result.forEach(v => {
+                    const t = makeTile(v);
+                    t.style.background = 'var(--purple)';
+                    mini.appendChild(t);
+                });
+                const r = document.createElement('span');
+                r.className = 'result';
+                r.textContent = '[' + (Array.isArray(result) ? result.join(', ') : result) + ']';
+                mini.appendChild(r);
+            }
+        }
+
+        document.querySelectorAll('button.run').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = +btn.dataset.i;
+                const mini = document.getElementById('mini-' + i);
+                mini.style.opacity = '0.3';
+                setTimeout(() => { paintMini(i); mini.style.opacity = '1'; }, 220);
+            });
+        });
+
+        // 初始绘制所有卡片
+        methods.forEach((_, i) => paintMini(i));
+    </script>
+</body>
+</html>

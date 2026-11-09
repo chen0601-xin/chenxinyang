@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucide SVG 图标</title>
+    <script src="cdn/lucide/lucide.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f0f2f5;
+            padding: 30px;
+        }
+        h1 { text-align: center; margin-bottom: 30px; color: #333; }
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 18px;
+            color: #444;
+            border-left: 4px solid #22c55e;
+            padding-left: 12px;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 8px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .icon-item:hover { background: #e9ecef; transform: translateY(-3px); }
+        .icon-item svg {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+            stroke-width: 2;
+        }
+        .icon-item span { font-size: 12px; color: #666; }
+        .text-blue { color: #3b82f6; }
+        .text-red { color: #ef4444; }
+        .text-green { color: #22c55e; }
+        .text-orange { color: #f97316; }
+        .text-purple { color: #a855f7; }
+        .text-cyan { color: #06b6d4; }
+    </style>
+</head>
+<body>
+    <h1>Lucide SVG 图标示例</h1>
+
+    <div class="section">
+        <h2>基础图标</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i data-lucide="home" class="text-blue"></i><span>首页</span></div>
+            <div class="icon-item"><i data-lucide="user" class="text-purple"></i><span>用户</span></div>
+            <div class="icon-item"><i data-lucide="heart" class="text-red"></i><span>收藏</span></div>
+            <div class="icon-item"><i data-lucide="star" class="text-orange"></i><span>星星</span></div>
+            <div class="icon-item"><i data-lucide="search" class="text-cyan"></i><span>搜索</span></div>
+            <div class="icon-item"><i data-lucide="settings" class="text-green"></i><span>设置</span></div>
+            <div class="icon-item"><i data-lucide="mail" class="text-blue"></i><span>邮件</span></div>
+            <div class="icon-item"><i data-lucide="phone" class="text-green"></i><span>电话</span></div>
+            <div class="icon-item"><i data-lucide="camera" class="text-purple"></i><span>相机</span></div>
+            <div class="icon-item"><i data-lucide="music" class="text-red"></i><span>音乐</span></div>
+            <div class="icon-item"><i data-lucide="book" class="text-orange"></i><span>书籍</span></div>
+            <div class="icon-item"><i data-lucide="car" class="text-cyan"></i><span>汽车</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>界面图标</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i data-lucide="bell" class="text-blue"></i><span>通知</span></div>
+            <div class="icon-item"><i data-lucide="folder" class="text-orange"></i><span>文件夹</span></div>
+            <div class="icon-item"><i data-lucide="file" class="text-cyan"></i><span>文件</span></div>
+            <div class="icon-item"><i data-lucide="image" class="text-purple"></i><span>图片</span></div>
+            <div class="icon-item"><i data-lucide="message-square" class="text-green"></i><span>消息</span></div>
+            <div class="icon-item"><i data-lucide="calendar" class="text-red"></i><span>日历</span></div>
+            <div class="icon-item"><i data-lucide="cloud" class="text-blue"></i><span>云</span></div>
+            <div class="icon-item"><i data-lucide="lock" class="text-orange"></i><span>锁定</span></div>
+            <div class="icon-item"><i data-lucide="globe" class="text-green"></i><span>地球</span></div>
+            <div class="icon-item"><i data-lucide="map-pin" class="text-red"></i><span>位置</span></div>
+            <div class="icon-item"><i data-lucide="sun" class="text-orange"></i><span>太阳</span></div>
+            <div class="icon-item"><i data-lucide="moon" class="text-purple"></i><span>月亮</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>箭头与符号</h2>
+        <div class="icon-grid">
+            <div class="icon-item"><i data-lucide="arrow-right" class="text-blue"></i><span>右箭头</span></div>
+            <div class="icon-item"><i data-lucide="chevron-down" class="text-green"></i><span>下箭头</span></div>
+            <div class="icon-item"><i data-lucide="plus" class="text-red"></i><span>加号</span></div>
+            <div class="icon-item"><i data-lucide="minus" class="text-cyan"></i><span>减号</span></div>
+            <div class="icon-item"><i data-lucide="x" class="text-purple"></i><span>关闭</span></div>
+            <div class="icon-item"><i data-lucide="check" class="text-green"></i><span>勾选</span></div>
+            <div class="icon-item"><i data-lucide="info" class="text-blue"></i><span>信息</span></div>
+            <div class="icon-item"><i data-lucide="alert-circle" class="text-orange"></i><span>警告</span></div>
+            <div class="icon-item"><i data-lucide="trash-2" class="text-red"></i><span>删除</span></div>
+            <div class="icon-item"><i data-lucide="edit" class="text-cyan"></i><span>编辑</span></div>
+            <div class="icon-item"><i data-lucide="download" class="text-green"></i><span>下载</span></div>
+            <div class="icon-item"><i data-lucide="upload" class="text-purple"></i><span>上传</span></div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

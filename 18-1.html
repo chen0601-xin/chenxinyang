@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-1 Canvas 文字动画</title>
+    <style>
+        body { margin: 0; background: #0b1020; overflow: hidden; font-family: "Microsoft YaHei", sans-serif; color: #fff; }
+        canvas { display: block; }
+        .hud { position: fixed; top: 16px; left: 16px; font-size: 13px; opacity: .7; background: rgba(0,0,0,.35); padding: 10px 14px; border-radius: 8px; backdrop-filter: blur(4px); line-height: 1.7; max-width: 300px; }
+        .hud b { color: #ffd86b; }
+        .controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .controls button { padding: 8px 18px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.25); color: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all .2s; }
+        .controls button:hover { background: rgba(255,255,255,.2); }
+        .controls button.active { background: #235789; border-color: #235789; }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <canvas id="cv"></canvas>
+    <div class="hud">
+        <b>Canvas 粒子文字动画</b><br>
+        鼠标移动 · 粒子会避让<br>
+        点击切换模式 · 右下按钮切换文字
+    </div>
+    <div class="controls">
+        <button data-text="陈新阳" class="active">陈新阳</button>
+        <button data-text="HTML5 Canvas">HTML5 Canvas</button>
+        <button data-text="Hello World">Hello World</button>
+    </div>
+    <script>
+        var canvas = document.getElementById('cv');
+        var ctx = canvas.getContext('2d');
+        var W, H, particles = [], mouse = { x: -9999, y: -9999 }, currentText = '陈新阳', hue = 0;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            buildText();
+        }
+
+        function buildText() {
+            particles = [];
+            var c = document.createElement('canvas');
+            var cx = c.getContext('2d');
+            var fontSize = Math.min(W / currentText.length * 1.6, 260);
+            c.width = W; c.height = H;
+            cx.fillStyle = '#fff';
+            cx.textAlign = 'center';
+            cx.textBaseline = 'middle';
+            cx.font = 'bold ' + fontSize + 'px "Microsoft YaHei", sans-serif';
+            cx.fillText(currentText, W / 2, H / 2);
+            var data = cx.getImageData(0, 0, W, H).data;
+            var gap = 5;
+            for (var y = 0; y < H; y += gap) {
+                for (var x = 0; x < W; x += gap) {
+                    var i = (y * W + x) * 4 + 3;
+                    if (data[i] > 128) {
+                        particles.push({
+                            tx: x, ty: y,
+                            x: Math.random() * W, y: Math.random() * H,
+                            vx: 0, vy: 0,
+                            r: 1.6 + Math.random() * 1.4
+                        });
+                    }
+                }
+            }
+        }
+
+        function tick() {
+            ctx.fillStyle = 'rgba(11,16,32,0.22)';
+            ctx.fillRect(0, 0, W, H);
+            hue = (hue + 0.4) % 360;
+            ctx.fillStyle = 'hsl(' + hue + ', 80%, 65%)';
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                var dx = p.tx - p.x, dy = p.ty - p.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 1) {
+                    p.vx += dx * 0.02;
+                    p.vy += dy * 0.02;
+                }
+                var mx = p.x - mouse.x, my = p.y - mouse.y;
+                var mdist = Math.sqrt(mx * mx + my * my);
+                if (mdist < 80) {
+                    var f = (80 - mdist) / 80 * 2.5;
+                    p.vx += (mx / mdist) * f;
+                    p.vy += (my / mdist) * f;
+                }
+                p.vx *= 0.86;
+                p.vy *= 0.86;
+                p.x += p.vx;
+                p.y += p.vy;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            requestAnimationFrame(tick);
+        }
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseleave', function () { mouse.x = -9999; mouse.y = -9999; });
+
+        document.querySelectorAll('.controls button').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.controls button').forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentText = btn.dataset.text;
+                buildText();
+            });
+        });
+
+        resize();
+        tick();
+    </script>
+</body>
+</html>

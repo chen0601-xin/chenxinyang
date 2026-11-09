@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14-2 javascript基本数据类型</title>
+</head>
+<body>
+    <h2>陈新阳的javascript基本数据类型</h2>
+    <script>
+        document.write('<h3>JavaScript 6种基本数据类型演示</h3>');
+
+        // 1. String 字符串类型
+        var str1 = "你好";
+        var str2 = '世界';
+        var str3 = "陈新阳";
+        document.write('<p>1. String 字符串类型</p>');
+        document.write('<p>str1 = "' + str1 + '", typeof: ' + typeof str1 + '</p>');
+        document.write('<p>str2 = "' + str2 + '", typeof: ' + typeof str2 + '</p>');
+        console.log('String:', str1, str2, str3);
+
+        // 2. Number 数字类型
+        var num1 = 10;
+        var num2 = 3.14;
+        var num3 = -5;
+        document.write('<p>2. Number 数字类型</p>');
+        document.write('<p>num1 = ' + num1 + ', typeof: ' + typeof num1 + '</p>');
+        document.write('<p>num2 = ' + num2 + ', typeof: ' + typeof num2 + '</p>');
+        document.write('<p>num3 = ' + num3 + ', typeof: ' + typeof num3 + '</p>');
+        console.log('Number:', num1, num2, num3);
+
+        // 3. Boolean 布尔类型
+        var bool1 = true;
+        var bool2 = false;
+        document.write('<p>3. Boolean 布尔类型</p>');
+        document.write('<p>bool1 = ' + bool1 + ', typeof: ' + typeof bool1 + '</p>');
+        document.write('<p>bool2 = ' + bool2 + ', typeof: ' + typeof bool2 + '</p>');
+        console.log('Boolean:', bool1, bool2);
+
+        // 4. Null 空类型
+        var nullVal = null;
+        document.write('<p>4. Null 空类型</p>');
+        document.write('<p>nullVal = ' + nullVal + ', typeof: ' + typeof nullVal + ' (注意:typeof null 显示 object,这是历史遗留bug)</p>');
+        console.log('Null:', nullVal, 'typeof:', typeof nullVal);
+
+        // 5. Undefined 未定义类型
+        var undefVal;
+        var undefVal2 = undefined;
+        document.write('<p>5. Undefined 未定义类型</p>');
+        document.write('<p>undefVal = ' + undefVal + ', typeof: ' + typeof undefVal + '</p>');
+        document.write('<p>undefVal2 = ' + undefVal2 + ', typeof: ' + typeof undefVal2 + '</p>');
+        console.log('Undefined:', undefVal, undefVal2);
+
+        // 6. Symbol 符号类型 (ES6新增)
+        var sym1 = Symbol();
+        var sym2 = Symbol('陈新阳');
+        document.write('<p>6. Symbol 符号类型 (ES6新增)</p>');
+        document.write('<p>sym1 = ' + String(sym1) + ', typeof: ' + typeof sym1 + '</p>');
+        document.write('<p>sym2 = ' + String(sym2) + ', typeof: ' + typeof sym2 + '</p>');
+        console.log('Symbol:', sym1, sym2);
+
+        document.write('<hr>');
+        document.write('<p><strong>总结:</strong> JavaScript 6种基本数据类型: String, Number, Boolean, Null, Undefined, Symbol</p>');
+    </script>
+</body>
+</html>

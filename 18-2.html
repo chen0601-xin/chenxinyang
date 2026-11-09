@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18-2 Canvas 电商系统架构图</title>
+    <style>
+        body { margin: 0; background: #f4f6fa; font-family: "Microsoft YaHei", sans-serif; }
+        header { background: #1e3a5f; color: #fff; padding: 24px 40px; }
+        header h1 { margin: 0 0 6px; font-size: 26px; }
+        header p { margin: 0; opacity: .85; font-size: 14px; }
+        .wrap { padding: 30px; }
+        canvas { background: #fff; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.08); max-width: 100%; height: auto; }
+        .legend { margin-top: 18px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; color: #334155; }
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .legend .dot { width: 14px; height: 14px; border-radius: 4px; }
+    </style>
+</head>
+<body><style>.__home_btn{position:fixed;right:20px;bottom:20px;z-index:9999;background:#235789;color:#fff;padding:9px 16px;border-radius:24px;text-decoration:none;font-size:13px;font-family:"Microsoft YaHei",sans-serif;box-shadow:0 4px 14px rgba(35,87,137,.3);transition:transform .2s}.__home_btn:hover{transform:translateY(-2px);background:#1a4267}</style>
+<a class="__home_btn" href="index.html">🏠 返回首页</a>
+    <header>
+        <h1>陈新阳 · 电商系统架构图</h1>
+        <p>基于 HTML5 Canvas 绘制 · 前后端分层架构</p>
+    </header>
+    <div class="wrap">
+        <canvas id="cv" width="1200" height="900"></canvas>
+        <div class="legend">
+            <span><i class="dot" style="background:#ff8c42"></i> 用户层 (Client)</span>
+            <span><i class="dot" style="background:#235789"></i> 接入层 (Gateway)</span>
+            <span><i class="dot" style="background:#6a4c93"></i> 业务服务层 (Service)</span>
+            <span><i class="dot" style="background:#2ecc71"></i> 数据层 (Data)</span>
+            <span><i class="dot" style="background:#7f8c8d"></i> 基础设施 (Infra)</span>
+        </div>
+    </div>
+    <script>
+        var canvas = document.getElementById('cv');
+        var ctx = canvas.getContext('2d');
+
+        var layers = [
+            { name: '用户层 Client', color: '#ff8c42', y: 70, items: [
+                { label: 'PC Web', x: 150, y: 70 },
+                { label: 'H5 / 小程序', x: 400, y: 70 },
+                { label: 'iOS App', x: 650, y: 70 },
+                { label: 'Android App', x: 900, y: 70 }
+            ]},
+            { name: '接入层 Gateway', color: '#235789', y: 200, items: [
+                { label: 'CDN 静态资源', x: 180, y: 200 },
+                { label: 'DNS / 负载均衡', x: 430, y: 200 },
+                { label: 'Nginx 反向代理', x: 680, y: 200 },
+                { label: 'API Gateway', x: 930, y: 200 }
+            ]},
+            { name: '业务服务层 Service', color: '#6a4c93', y: 360, items: [
+                { label: '用户服务 User', x: 100, y: 360 },
+                { label: '商品服务 Product', x: 280, y: 360 },
+                { label: '订单服务 Order', x: 460, y: 360 },
+                { label: '支付服务 Pay', x: 640, y: 360 },
+                { label: '购物车 Cart', x: 820, y: 360 },
+                { label: '搜索服务 Search', x: 1000, y: 360 },
+                { label: '消息服务 MQ', x: 100, y: 460 },
+                { label: '库存服务 Stock', x: 280, y: 460 },
+                { label: '促销服务 Promo', x: 460, y: 460 },
+                { label: '推荐服务 Rec', x: 640, y: 460 },
+                { label: '日志监控 Monitor', x: 820, y: 460 },
+                { label: '鉴权 Auth', x: 1000, y: 460 }
+            ]},
+            { name: '数据层 Data', color: '#2ecc71', y: 620, items: [
+                { label: 'MySQL 主从', x: 150, y: 620 },
+                { label: 'Redis 缓存', x: 370, y: 620 },
+                { label: 'MongoDB', x: 590, y: 620 },
+                { label: 'ElasticSearch', x: 810, y: 620 },
+                { label: 'OSS / 对象存储', x: 1030, y: 620 },
+                { label: 'Kafka 消息队列', x: 260, y: 720 },
+                { label: 'ClickHouse 数仓', x: 540, y: 720 },
+                { label: 'Redis Cluster', x: 820, y: 720 }
+            ]},
+            { name: '基础设施 Infra', color: '#7f8c8d', y: 830, items: [
+                { label: 'Docker / K8s', x: 200, y: 830 },
+                { label: 'Prometheus', x: 450, y: 830 },
+                { label: 'Grafana', x: 650, y: 830 },
+                { label: 'Jenkins CI/CD', x: 850, y: 830 },
+                { label: '云服务器 (云厂商)', x: 1050, y: 830 }
+            ]}
+        ];
+
+        function drawNode(x, y, w, h, label, color) {
+            ctx.save();
+            var grad = ctx.createLinearGradient(x, y, x, y + h);
+            grad.addColorStop(0, color);
+            grad.addColorStop(1, shade(color, -25));
+            ctx.fillStyle = grad;
+            ctx.shadowColor = 'rgba(0,0,0,.18)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetY = 3;
+            roundRect(ctx, x, y, w, h, 8);
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px "Microsoft YaHei", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, x + w / 2, y + h / 2);
+            ctx.restore();
+        }
+
+        function shade(hex, percent) {
+            var n = parseInt(hex.replace('#', ''), 16);
+            var r = Math.max(0, Math.min(255, ((n >> 16) & 255) + percent));
+            var g = Math.max(0, Math.min(255, ((n >> 8) & 255) + percent));
+            var b = Math.max(0, Math.min(255, (n & 255) + percent));
+            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+        }
+
+        function roundRect(c, x, y, w, h, r) {
+            c.beginPath();
+            c.moveTo(x + r, y);
+            c.lineTo(x + w - r, y);
+            c.quadraticCurveTo(x + w, y, x + w, y + r);
+            c.lineTo(x + w, y + h - r);
+            c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            c.lineTo(x + r, y + h);
+            c.quadraticCurveTo(x, y + h, x, y + h - r);
+            c.lineTo(x, y + r);
+            c.quadraticCurveTo(x, y, x + r, y);
+            c.closePath();
+        }
+
+        function drawArrow(from, to, color) {
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(to.x, to.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            var angle = Math.atan2(to.y - from.y, to.x - from.x);
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(to.x, to.y);
+            ctx.lineTo(to.x - 10 * Math.cos(angle - 0.4), to.y - 10 * Math.sin(angle - 0.4));
+            ctx.lineTo(to.x - 10 * Math.cos(angle + 0.4), to.y - 10 * Math.sin(angle + 0.4));
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawLayerHeader(name, color, y, height) {
+            ctx.save();
+            ctx.fillStyle = color + '22';
+            ctx.fillRect(20, y - 38, 1160, height);
+            ctx.fillStyle = color;
+            ctx.fillRect(20, y - 38, 6, height);
+            ctx.fillStyle = color;
+            ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(name, 40, y - 34);
+            ctx.restore();
+        }
+
+        var nodeW = 140, nodeH = 44;
+
+        layers.forEach(function (layer) {
+            var topY = layer.y - 45;
+            var botY = layer.items[layer.items.length - 1].y + nodeH - layer.y + 20;
+            drawLayerHeader(layer.name, layer.color, layer.y, Math.max(botY, 100));
+            layer.items.forEach(function (it) {
+                drawNode(it.x - nodeW / 2, it.y, nodeW, nodeH, it.label, layer.color);
+            });
+        });
+
+        function connectLayers(fromLayer, toLayer, fromRow) {
+            var from = fromLayer.items.filter(function (_, i) { return !fromRow || i < fromRow; });
+            var to = toLayer.items;
+            from.forEach(function (f) {
+                to.forEach(function (t) {
+                    if (Math.random() > 0.55) return;
+                    var color = fromLayer.color + '88';
+                    drawArrow(
+                        { x: f.x, y: f.y + nodeH },
+                        { x: t.x, y: t.y },
+                        color
+                    );
+                });
+            });
+        }
+
+        connectLayers(layers[0], layers[1], 4);
+        connectLayers(layers[1], layers[2], 4);
+        connectLayers(layers[2], layers[3], 6);
+        connectLayers(layers[3], layers[4], 4);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '12px "Microsoft YaHei", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('draw on HTML5 Canvas · by 陈新阳', 1180, 890);
+    </script>
+</body>
+</html>
